@@ -1,0 +1,166 @@
+name: nrh_ret
+
+model_type: segmented_regression
+
+segmentation_col: general_type
+
+fit_filters:
+- unit_price_non_residential > 20
+- unit_price_non_residential < 500
+- year_built > 1880
+- year_built < 2015
+- building_sqft > 500
+- sale_lease == 'lease'
+- general_type == 'Retail'
+- zone_id > 0
+- node_id > 0
+- lease_type == 'NNN'
+- building_age < 200
+
+predict_filters:
+- county_id==1
+- building_type_id==4
+- zone_id > 0
+
+min_segment_size: 10
+
+default_config:
+    model_expression: np.log1p(unit_price_non_residential) ~ np.log1p(real_far) +
+        np.log1p(building_age) + jobs_1_500 + np.log1p(fwy_exit_dist_tdm_output) +
+        parcel_volume + jobs_7_500 + train_stn_500 + distmed_4 + distmed_5 + distmed_6
+        + distmed_7 +  distmed_9 + distmed_10 + distmed_11 + distmed_12 + distmed_15
+        + distmed_16 + distmed_17 + distmed_18 + distmed_19 + distmed_20 + distmed_21
+        + distmed_22 + distmed_25 + distmed_26 + distmed_27 + distmed_28 + distmed_29
+        + distmed_30 + distmed_31 + distmed_32 + distmed_33 + distmed_34 + distmed_35
+        + distmed_36 + distmed_37 + distmed_38 + distmed_39+ parcel_volume
+    ytransform: np.exp
+
+models:
+    Retail:
+        fit_parameters:
+            Coefficient:
+                Intercept: 5.474643290582064
+                distmed_10: 0.16319559345793472
+                distmed_11: -0.0040439574860654075
+                distmed_12: -2.582670292999378e-16
+                distmed_15: 0.18759166926220336
+                distmed_16: 0.145672752184996
+                distmed_17: 2.722152883597649e-16
+                distmed_18: -1.592739931816778e-17
+                distmed_19: 0.1846907277561792
+                distmed_20: 0.007424252559730992
+                distmed_21: -0.4272395247771761
+                distmed_22: -0.03984882614398821
+                distmed_25: 0.17232647386327846
+                distmed_26: 0.13077361166089274
+                distmed_27: -9.757967552734395e-17
+                distmed_28: 1.0219682924849218e-17
+                distmed_29: 0.21162526733017445
+                distmed_30: -0.0024037956186103854
+                distmed_31: -0.05167524757934604
+                distmed_32: 0.16816709383035147
+                distmed_33: 0.053327274068311316
+                distmed_34: 0.1317500426894709
+                distmed_35: 0.31978814765966757
+                distmed_36: 0.0
+                distmed_37: 0.0
+                distmed_38: 0.07274610877653742
+                distmed_39: 0.2277582524480647
+                distmed_4: -1.2549591742457748e-15
+                distmed_5: 6.197875417471172e-16
+                distmed_6: 4.478985134861432e-16
+                distmed_7: 0.05617351418039495
+                distmed_9: -0.0941695136815704
+                jobs_1_500: 0.0668885170627876
+                jobs_7_500: -0.054987389726899205
+                np.log1p(building_age): -0.15574051015606308
+                np.log1p(fwy_exit_dist_tdm_output): -0.03380166030776365
+                np.log1p(real_far): -0.05113185910395861
+                parcel_volume: 0.0018845489282930071
+                train_stn_500: 0.27596569525975767
+            Std. Error:
+                Intercept: 0.06212070537553417
+                distmed_10: 0.07013157995003602
+                distmed_11: 0.07221092106656225
+                distmed_12: 1.2495295899832592e-16
+                distmed_15: 0.10720255246791316
+                distmed_16: 0.07763913747799538
+                distmed_17: 8.80217004665945e-17
+                distmed_18: 4.828938231646982e-17
+                distmed_19: 0.1488345469901409
+                distmed_20: 0.11251750641284158
+                distmed_21: 0.2665691831851434
+                distmed_22: 0.04689918765638866
+                distmed_25: 0.0715541133919922
+                distmed_26: 0.06728420727496241
+                distmed_27: 1.124786582629749e-17
+                distmed_28: 1.251144327007981e-17
+                distmed_29: 0.122126349128901
+                distmed_30: 0.06398289893071148
+                distmed_31: 0.05850461469465538
+                distmed_32: 0.07157654036941452
+                distmed_33: 0.049113133650058705
+                distmed_34: 0.04655185322007977
+                distmed_35: 0.21817555047304932
+                distmed_36: 0.0
+                distmed_37: 0.0
+                distmed_38: 0.12311817539920629
+                distmed_39: 0.13924612542693704
+                distmed_4: 1.1081865647618557e-15
+                distmed_5: 5.369887818540412e-16
+                distmed_6: 2.449582700627783e-16
+                distmed_7: 0.11065844970256715
+                distmed_9: 0.08808994921850245
+                jobs_1_500: 0.010177631948155578
+                jobs_7_500: 0.01187060425613009
+                np.log1p(building_age): 0.012511621025594374
+                np.log1p(fwy_exit_dist_tdm_output): 0.040261086961974266
+                np.log1p(real_far): 0.01596498089931034
+                parcel_volume: 0.0007170464671912373
+                train_stn_500: 0.15020314275619848
+            T-Score:
+                Intercept: 88.12912309167396
+                distmed_10: 2.3269915432420096
+                distmed_11: -0.056002020557773896
+                distmed_12: -2.0669140720660963
+                distmed_15: 1.7498806226498338
+                distmed_16: 1.8762798881721585
+                distmed_17: 3.09259292784368
+                distmed_18: -0.32983232657203615
+                distmed_19: 1.2409130238318493
+                distmed_20: 0.06598308828930521
+                distmed_21: -1.602734118296189
+                distmed_22: -0.8496698585899697
+                distmed_25: 2.408337769755162
+                distmed_26: 1.9436003923844372
+                distmed_27: -8.675394695694434
+                distmed_28: 0.8168268603582156
+                distmed_29: 1.7328387267747585
+                distmed_30: -0.037569345227910195
+                distmed_31: -0.8832678900467448
+                distmed_32: 2.3494722287836534
+                distmed_33: 1.085804755369088
+                distmed_34: 2.8301782544855074
+                distmed_35: 1.4657377830206058
+                distmed_36: .nan
+                distmed_37: .nan
+                distmed_38: 0.5908640908676623
+                distmed_39: 1.6356523511856729
+                distmed_4: -1.1324439531672719
+                distmed_5: 1.1541908559191865
+                distmed_6: 1.8284686341528908
+                distmed_7: 0.5076296869455581
+                distmed_9: -1.069015415685936
+                jobs_1_500: 6.57211003537118
+                jobs_7_500: -4.632231733148985
+                np.log1p(building_age): -12.447668438603822
+                np.log1p(fwy_exit_dist_tdm_output): -0.8395615433753341
+                np.log1p(real_far): -3.2027510353092508
+                parcel_volume: 2.6282103246042423
+                train_stn_500: 1.8372830967171578
+        fit_rsquared: 0.24989068033676676
+        fit_rsquared_adj: 0.22657984687331456
+        fitted: true
+        name: Retail
+
+fitted: true

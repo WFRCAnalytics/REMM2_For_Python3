@@ -1,0 +1,184 @@
+name: hlcm
+
+model_type: segmented_locationchoice
+
+segmentation_col: income_quartile
+
+choosers_fit_filters:
+- building_id > 0
+- parcel_id > 0
+- income > 0
+- county_id > 0
+- county_id == 2
+- b_year_built > 2000
+
+choosers_predict_filters:
+- cid == 2
+
+alts_fit_filters:
+- parcel_id > 0
+- building_type_id > 0
+- building_type_id < 3
+- residential_units > 0
+- sqft_per_unit > 0
+- res_price_per_sqft > 0
+- county_id == 2
+
+alts_predict_filters:
+- county_id == 2
+- res_price_per_sqft > -1
+
+interaction_predict_filters: null
+
+choice_column: null
+
+sample_size: 50
+
+estimation_sample_size: 15000
+
+prediction_sample_size: null
+
+default_config:
+    model_expression: np.log1p(proportion_workers * ave_hhpropwkrs_zn)
+
+models:
+    1:
+        fit_parameters:
+            Coefficient:
+                commute_time: 0.0464461997915189
+                np.log1p(is_mf): 1.986994360388505
+                np.log1p(logsum_jobs9): 0.15604305410929195
+                np.log1p(real_far): -0.12036277005233327
+                np.log1p(sqft_per_unit): -0.13136960844495016
+                res_price_per_sqft: 0.01646898484145259
+            Std. Error:
+                commute_time: 0.0019671769649123342
+                np.log1p(is_mf): 0.035553622069080325
+                np.log1p(logsum_jobs9): 0.011664795206139205
+                np.log1p(real_far): 0.017137084863260578
+                np.log1p(sqft_per_unit): 0.015411641833142859
+                res_price_per_sqft: 0.0001287045677586649
+            T-Score:
+                commute_time: 23.61058543281018
+                np.log1p(is_mf): 55.88725549615719
+                np.log1p(logsum_jobs9): 13.377264782768426
+                np.log1p(real_far): -7.023526522318482
+                np.log1p(sqft_per_unit): -8.524050186686715
+                res_price_per_sqft: 127.95959870152964
+        fitted: true
+        log_likelihoods:
+            convergence: -39032.18605566621
+            'null': -44714.42295203677
+            ratio: 0.12707839039912594
+        model_expression: np.log1p(is_mf) + np.log1p(sqft_per_unit) + res_price_per_sqft
+            + np.log1p(real_far) + np.log1p(logsum_jobs9) + commute_time - 1
+        name: 1
+    2:
+        fit_parameters:
+            Coefficient:
+                ave_income_1000: -1.6077053024650814
+                building_age: -0.214002961594067
+                commute_time: 0.017417112463800528
+                is_mf: 0.935865575732872
+                np.log1p(logsum_jobs1): 0.30215635534990026
+                np.log1p(sqft_per_unit): -0.5365591226249602
+                np.log1p(university_dist): 0.3164039383257852
+            Std. Error:
+                ave_income_1000: 0.03924837488338386
+                building_age: 0.0029854178939523026
+                commute_time: 0.005252046293295902
+                is_mf: 0.024949597195485996
+                np.log1p(logsum_jobs1): 0.040373480780183726
+                np.log1p(sqft_per_unit): 0.01954254738624426
+                np.log1p(university_dist): 0.041177154172906884
+            T-Score:
+                ave_income_1000: -40.96234066358037
+                building_age: -71.68274901399317
+                commute_time: 3.316252654900055
+                is_mf: 37.51024789699584
+                np.log1p(logsum_jobs1): 7.484030346429924
+                np.log1p(sqft_per_unit): -27.455945840644965
+                np.log1p(university_dist): 7.683968080872568
+        fitted: true
+        log_likelihoods:
+            convergence: -31363.62183213172
+            'null': -58543.424276214144
+            ratio: 0.4642673840847642
+        model_expression: is_mf + np.log1p(logsum_jobs1) + np.log1p(university_dist)+np.log1p(sqft_per_unit)
+            + ave_income_1000 + building_age + commute_time - 1
+        name: 2
+    3:
+        fit_parameters:
+            Coefficient:
+                commute_time: -0.003947429102790185
+                np.log1p(airport_distance): 0.004298184535603348
+                np.log1p(building_age): -1.091343061127036
+                np.log1p(elevation): -0.24164762382998306
+                np.log1p(logsum_jobs6): -0.5859540531131336
+                np.log1p(population_within_20_min): 0.19884181299542505
+            Std. Error:
+                commute_time: 0.005020203825311709
+                np.log1p(airport_distance): 0.04147602438506825
+                np.log1p(building_age): 0.009446079553196932
+                np.log1p(elevation): 0.07023306125346145
+                np.log1p(logsum_jobs6): 0.056227465363890505
+                np.log1p(population_within_20_min): 0.033251261327243084
+            T-Score:
+                commute_time: -0.7863085325116427
+                np.log1p(airport_distance): 0.10363058174762609
+                np.log1p(building_age): -115.53396887893896
+                np.log1p(elevation): -3.4406534403777456
+                np.log1p(logsum_jobs6): -10.421135815405892
+                np.log1p(population_within_20_min): 5.979978053720086
+        fitted: true
+        log_likelihoods:
+            convergence: -41350.21856173049
+            'null': -58578.63248326297
+            ratio: 0.29410747897631384
+        model_expression: np.log1p(elevation) + np.log1p(logsum_jobs6) + np.log1p(population_within_20_min)
+            + np.log1p(building_age) + np.log1p(airport_distance) + commute_time -
+            1
+        name: 3
+    4:
+        fit_parameters:
+            Coefficient:
+                ave_sqft_per_unit_500: 0.9989623499366075
+                building_age: -0.18536730172444343
+                commute_time: 0.04937626033233074
+                is_sf: -0.06683177596567688
+                np.log1p(airport_distance): 0.23173270533600338
+                np.log1p(logsum_hhinc4): 0.4465153810211189
+                np.log1p(res_price_per_sqft): 1.2491705600641876
+            Std. Error:
+                ave_sqft_per_unit_500: 0.03193682567283066
+                building_age: 0.002779932070290579
+                commute_time: 0.0031205498609292075
+                is_sf: 0.037990056849664534
+                np.log1p(airport_distance): 0.04546495508601911
+                np.log1p(logsum_hhinc4): 0.03828728392728102
+                np.log1p(res_price_per_sqft): 0.045819142478046186
+            T-Score:
+                ave_sqft_per_unit_500: 31.279325007758867
+                building_age: -66.68051486059063
+                commute_time: 15.822935871189044
+                is_sf: -1.7591912597063415
+                np.log1p(airport_distance): 5.096952254710646
+                np.log1p(logsum_hhinc4): 11.662237046356823
+                np.log1p(res_price_per_sqft): 27.263071557105548
+        fitted: true
+        log_likelihoods:
+            convergence: -36187.318948259934
+            'null': -58641.22485134977
+            ratio: 0.3829030849885634
+        model_expression: np.log1p(airport_distance) + ave_sqft_per_unit_500 + np.log1p(logsum_hhinc4)
+            + building_age  + np.log1p(res_price_per_sqft)  + is_sf + commute_time
+            - 1
+        name: 4
+
+fitted: true
+
+choice_mode: aggregate
+
+remove_alts: true
+
+probability_mode: single_chooser

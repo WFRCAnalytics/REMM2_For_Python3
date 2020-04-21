@@ -1,0 +1,251 @@
+aggregation_tables:
+  - nodes
+  - zones
+  
+tdm:
+  run_years:
+    - 2015
+    - 2022
+    - 2027
+    - 2035
+    - 2045
+  main_dir: E:/_TDMv8.3_REMM/REMM/REMM_
+  input_dir: E:/_TDMv8.3_REMM/1_Inputs/2_SEData/REMM
+  bat_dir: E:/_TDMv8.3_REMM/REMM
+  output_traveltime: 6_REMM/MinAuto_Trans_pk.dbf
+  output_volume: 6_REMM/TwowayVolumeRoundTAZ.dbf
+  output_logsum: 6_REMM/IJ_logsum.dbf
+  output_distance: 6_REMM/parceldistance2transitstops.dbf
+  output_fwy: 6_REMM/FreewayExits.DBF
+
+set_nan_price_to_zero: True
+
+
+remove_invalid_building_ids: True
+
+
+reconcile_residential_units_and_households: True
+
+
+reconcile_non_residential_sqft_and_jobs: True
+
+
+set_nan_price_to_zero: True
+
+
+parcel_size_factor: 1
+
+
+ave_sqft_per_unit_clip:
+  lower: 400
+  sf_upper: 5000
+  mf_upper: 2500
+
+
+table_reprocess:
+  parcels:
+    fill_nas:
+      zone_id:
+        how: "mode"
+        type: "int"
+
+
+rates:
+  households_relocation: .05
+  jobs_relocation: .05
+  simple_households_transition: .02
+  simple_jobs_transition: .02
+
+
+build_networks:
+  name: osm_wfrc.h5
+  max_distance: 1500
+
+
+households_transition:
+  add_columns:
+    - income_quartile
+  total_column: number_of_households
+
+
+jobs_transition:
+  add_columns:
+    - sector_id
+    - cid
+  total_column: number_of_jobs
+
+
+feasibility:
+  residential_to_yearly: False
+  parcel_filter: zone_id > 0 and shape_area > 0 and ((total_residential_units < 1 and total_job_spaces < 1) or (total_residential_units >= 1 and avg_building_age >= 50) or (total_job_spaces >= 1 and avg_building_age >= 20))
+  pass_through:
+    - oldest_building
+    - total_sqft
+    - max_far
+    - max_dua
+    - land_cost
+    - residential
+    - industrial
+    - retail
+    - office
+    - min_max_fars
+    - max_far_from_dua
+    - max_height
+    - max_far_from_heights
+    - building_purchase_price
+    - building_purchase_price_sqft
+    - shape_area
+
+#price adjustment factor applied to residential median parcel price in feasibility
+res_price_multiplier: 1
+nonres_price_multiplier: 1
+res_price_multiplier_slc: 10
+res_price_multiplier_utah: 10
+res_price_multiplier_davis: 10
+res_price_multiplier_weber: 10
+nonres_price_multiplier_slc: 10
+nonres_price_multiplier_utah: 10
+nonres_price_multiplier_davis: 10
+nonres_price_multiplier_weber: 10
+
+
+residential_developer:
+  target_vacancy: .07
+  min_unit_size: 800
+  bldg_sqft_per_job: 400
+
+
+non_residential_developer:
+  target_vacancy: .1
+  bldg_sqft_per_job: 600
+
+
+industrial_developer:
+  target_vacancy: .1
+  bldg_sqft_per_job: 648
+  
+retail_developer:
+  target_vacancy: .1
+  bldg_sqft_per_job: 650
+  
+office_developer:
+  target_vacancy: .1
+  bldg_sqft_per_job: 462
+
+
+pusher:
+  key: 7d78b1b3454b78aed26f
+  secret: d87736e21dd7819926e6
+  host: http://localhost:8765/
+  region: bayarea
+
+
+store: remm_data_2015_base_year_02082019.h5
+
+
+scenario: baseline
+
+
+scenario_inputs:
+  baseline:
+    zoning_table_name: zoning_baseline
+  test:
+    zoning_table_name: zoning_test
+
+
+# this maps Synthicity's 25 employment categories to
+# the six major employment categories traditionally
+# used by MTC and ABAG for use in output to the Travel Model
+naics_to_empsix:
+  11: AGREMPN
+  21: AGREMPN
+  22: MWTEMPN
+  23: OTHEMPN
+  31: MWTEMPN
+  32: MWTEMPN
+  33: MWTEMPN
+  42: MWTEMPN
+  44: RETEMPN
+  45: RETEMPN
+  48: MWTEMPN
+  49: MWTEMPN
+  51: OTHEMPN
+  52: FPSEMPN
+  53: FPSEMPN
+  54: FPSEMPN
+  55: FPSEMPN
+  56: FPSEMPN
+  61: HEREMPN
+  62: HEREMPN
+  71: HEREMPN
+  72: HEREMPN
+  81: OTHEMPN
+  92: OTHEMPN
+  99: OTHEMPN
+
+
+empsix_name_to_id:
+  AGREMPN: 1
+  MWTEMPN: 2
+  RETEMPN: 3
+  FPSEMPN: 4
+  HEREMPN: 5
+  OTHEMPN: 6
+
+
+# this maps building type ids to general building types
+# basically just reduces dimensionality
+building_type_map:
+  1: SF Residential
+  2: MF Residential
+  3: Industrial
+  4: Retail
+  5: Office
+  6: Govt
+  7: Mixed Use
+  8: Other
+
+
+# this maps building "forms" from the developer model
+# to building types so that when the developer builds a
+# "form" this can be converted for storing as a type
+# in the building table - in the long run, the developer
+# forms and the building types should be the same and the
+# developer model should account for the differences
+form_to_btype:
+  residential:
+    - 1
+    - 2
+  industrial:
+    - 3
+  retail:
+    - 4
+  office:
+    - 5
+  mixedresidential:
+    - 7
+  mixedoffice:
+    - 7
+
+
+building_sqft_per_job:
+  1: 200
+  2: 200
+  3: 975
+  4: 374
+  5: 633
+  6: 350
+  7: 537
+  8: 300
+  
+sector_id_to_desc:
+  1: FOOD
+  2: FM_CONS
+  3: GVED
+  4: HLTH
+  5: MANU
+  6: OFFI
+  7: OTHR
+  8: FM_MING
+  9: RETL
+  10: WSLE 

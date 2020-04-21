@@ -1,0 +1,95 @@
+name: nrh_mu
+
+model_type: segmented_regression
+
+segmentation_col: general_type
+
+fit_filters:
+- county_id == 3
+- non_residential_sqft > 0
+- non_residential_sqft < 100000
+- building_type_id in [7,8]
+- zone_id > 0
+- node_id > 0
+
+predict_filters:
+- building_type_id in [7,8]
+- zone_id > 0
+
+min_segment_size: 10
+
+default_config:
+    model_expression: np.log1p(unit_price_non_residential) ~ np.log1p(building_age)
+        + ave_income_1500 + jobs_1500 + np.log1p(bus_rte_dist) + np.log1p(elevation)
+        + np.log1p(jobs_within_30_min)
+    ytransform: np.exp
+
+models:
+    Mixed Use:
+        fit_parameters:
+            Coefficient:
+                Intercept: -56.42562014388749
+                ave_income_1500: -2.805738879508097
+                jobs_1500: -0.7741650310288235
+                np.log1p(building_age): -0.3735169750864143
+                np.log1p(bus_rte_dist): 0.309396778995204
+                np.log1p(elevation): 12.115195741277224
+                np.log1p(jobs_within_30_min): 0.4159907828808521
+            Std. Error:
+                Intercept: 34.24448341660838
+                ave_income_1500: 0.6925066565969856
+                jobs_1500: 0.1674323392726809
+                np.log1p(building_age): 0.17446762414566092
+                np.log1p(bus_rte_dist): 0.07878637124799164
+                np.log1p(elevation): 5.5972479697770705
+                np.log1p(jobs_within_30_min): 1.9495903874985396
+            T-Score:
+                Intercept: -1.6477287584522704
+                ave_income_1500: -4.051569544898884
+                jobs_1500: -4.623748520696564
+                np.log1p(building_age): -2.140895635596949
+                np.log1p(bus_rte_dist): 3.927034258518296
+                np.log1p(elevation): 2.164491515597397
+                np.log1p(jobs_within_30_min): 0.21337342733547085
+        fit_rsquared: 0.4755462671764621
+        fit_rsquared_adj: 0.41617414647945783
+        fitted: true
+        model_expression: np.log1p(unit_price_non_residential) ~ np.log1p(building_age)
+            + ave_income_1500 + jobs_1500 + np.log1p(bus_rte_dist) + np.log1p(elevation)
+            + np.log1p(jobs_within_30_min)
+        name: Mixed Use        
+    Other:
+        fit_parameters:
+            Coefficient:
+                Intercept: -49.33746438218007
+                ave_income_1500: -1.4661860437602172
+                jobs_1500: -0.43225191443831706
+                np.log1p(building_age): 0.040511573448491975
+                np.log1p(elevation): 4.841447205292078
+                np.log1p(fwy_exit_dist): 0.606496779717545
+                np.log1p(jobs_within_30_min): 2.753761840192713
+            Std. Error:
+                Intercept: 20.619813794196613
+                ave_income_1500: 0.41834969220577406
+                jobs_1500: 0.07911813101505816
+                np.log1p(building_age): 0.10256087920219997
+                np.log1p(elevation): 2.949114296950449
+                np.log1p(fwy_exit_dist): 0.2977829200816236
+                np.log1p(jobs_within_30_min): 2.003117586285032
+            T-Score:
+                Intercept: -2.392721140676157
+                ave_income_1500: -3.504690145771741
+                jobs_1500: -5.463373677975896
+                np.log1p(building_age): 0.39500025510334147
+                np.log1p(elevation): 1.6416614338408004
+                np.log1p(fwy_exit_dist): 2.0367077451967415
+                np.log1p(jobs_within_30_min): 1.3747379879479869
+        fit_rsquared: 0.14670719703648127
+        fit_rsquared_adj: 0.12425212327428337
+        fitted: true
+        model_expression: np.log1p(unit_price_non_residential) ~ np.log1p(building_age)
+            + ave_income_1500 + jobs_1500 + np.log1p(elevation) + np.log1p(fwy_exit_dist)
+            + np.log1p(jobs_within_30_min)
+        name: Other
+
+fitted: true

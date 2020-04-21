@@ -1,0 +1,171 @@
+name: rsh
+
+model_type: segmented_regression
+
+segmentation_col: general_type
+
+fit_filters:
+- building_type_id == 2
+- res_price_per_sqft > 10.0
+- res_price_per_sqft < 200.0
+- 2500 > sqft_per_unit > 500
+- 2010 > year_built > 1850
+- residential_units < 100
+- building_sqft > 500
+- parcel_acres < 1
+- 100000 < improvement_value < 10000000
+
+predict_filters:
+- county_id==3
+- sqft_per_unit > 0
+- sqft_per_unit <= 5000
+- building_type_id == 2
+
+min_segment_size: 10
+
+default_config:
+    model_expression: np.log1p(res_price_per_sqft) ~ ave_income_500 + fwy_exit_dist_tdm_output
+        + mfdu_500 + np.log1p(sqft_per_unit) + avg_building_age+ np.log1p(real_far)+
+        commute_time + distmed_1 + distmed_2 + distmed_3 + distmed_4 + distmed_5 +
+        distmed_6 + distmed_7 + distmed_8 + distmed_9 + distmed_10 + distmed_11 +
+        distmed_12 + distmed_13 + distmed_14 + distmed_15 + distmed_16 + distmed_17
+        + distmed_18 + distmed_19 + distmed_20 + distmed_21 + distmed_22 + distmed_23
+        + distmed_24 + distmed_25 + distmed_26 + distmed_27 + distmed_28 + distmed_29
+        + distmed_30 + distmed_31 + distmed_36 + parcel_volume
+    ytransform: np.exp
+
+models:
+    MF Residential:
+        fit_parameters:
+            Coefficient:
+                Intercept: 4.516687081210475
+                ave_income_500: 0.15840108865589825
+                avg_building_age: -0.005335180430738204
+                commute_time: -0.005
+                distmed_1: -1.2445546253350643e-13
+                distmed_10: -0.024792264710747913
+                distmed_11: -0.6576831552122111
+                distmed_12: -0.27811381745160335
+                distmed_13: -0.5109728058868361
+                distmed_14: -0.2684391835835381
+                distmed_15: -0.08408549083326933
+                distmed_16: -0.015283638152812806
+                distmed_17: -7.283061847187124e-17
+                distmed_18: 7.720005321069294e-17
+                distmed_19: -0.09477931766605285
+                distmed_2: -3.5752304511781755e-14
+                distmed_20: -0.29790392661571274
+                distmed_21: -0.48381770815311576
+                distmed_22: -0.23512696616334794
+                distmed_23: 0.4432357645808854
+                distmed_24: 0.30488682145705015
+                distmed_25: 0.07272265655770926
+                distmed_26: 0.15886273364671122
+                distmed_27: -0.5235005469231906
+                distmed_28: -0.3103214843615696
+                distmed_29: -0.3218890374367751
+                distmed_3: 1.3665241532186233e-14
+                distmed_30: -0.14048702595647428
+                distmed_31: -0.04164190052005878
+                distmed_36: 0.0
+                distmed_4: 4.392560424731519e-15
+                distmed_5: -3.11588563908653e-15
+                distmed_6: -0.40290206660082095
+                distmed_7: -0.35462523733296575
+                distmed_8: -0.21770155349671283
+                distmed_9: -0.20127298589375658
+                fwy_exit_dist_tdm_output: 0.04047478720634912
+                mfdu_500: 0.029832651122409473
+                np.log1p(real_far): 0.1126378502675871
+                np.log1p(sqft_per_unit): -0.27394839431919654
+                parcel_volume: -0.00029898692959426723
+            Std. Error:
+                Intercept: 0.08663093156568831
+                ave_income_500: 0.007603849931066001
+                avg_building_age: 9.953643096118897e-05
+                commute_time: 0.0010327648821640356
+                distmed_1: 6.048957720669184e-15
+                distmed_10: 0.013055018023419056
+                distmed_11: 0.03680042231428885
+                distmed_12: 0.08727231511650246
+                distmed_13: 0.06322308350219977
+                distmed_14: 0.0205607435230893
+                distmed_15: 0.016877856782415393
+                distmed_16: 0.011861195861651472
+                distmed_17: 2.3494505793029597e-17
+                distmed_18: 1.881969960366014e-17
+                distmed_19: 0.02003355808278071
+                distmed_2: 2.187501346676743e-15
+                distmed_20: 0.022021527670072386
+                distmed_21: 0.03037786302116245
+                distmed_22: 0.009650471501860908
+                distmed_23: 0.014778182528034998
+                distmed_24: 0.009626242165464293
+                distmed_25: 0.008109192819115011
+                distmed_26: 0.007623028496327305
+                distmed_27: 0.2589282817958965
+                distmed_28: 0.020659145603494855
+                distmed_29: 0.017474413027470846
+                distmed_3: 9.136882362968276e-16
+                distmed_30: 0.00859773003653699
+                distmed_31: 0.014534109125685432
+                distmed_36: 0.0
+                distmed_4: 5.07492477255882e-16
+                distmed_5: 3.6404867144921796e-16
+                distmed_6: 0.12981141026646395
+                distmed_7: 0.015421261645941165
+                distmed_8: 0.018818381818302053
+                distmed_9: 0.018328613887990404
+                fwy_exit_dist_tdm_output: 0.0028559034666355543
+                mfdu_500: 0.002378464276664864
+                np.log1p(real_far): 0.0033916430242786825
+                np.log1p(sqft_per_unit): 0.005609369855643787
+                parcel_volume: 0.00010589254504369901
+            T-Score:
+                Intercept: 52.13711776590646
+                ave_income_500: 20.831695797774856
+                avg_building_age: -53.60027860370527
+                commute_time: 2.3157938039423427
+                distmed_1: -20.574695390619823
+                distmed_10: -1.899060167230234
+                distmed_11: -17.871619776408007
+                distmed_12: -3.1867358747197296
+                distmed_13: -8.08206081674358
+                distmed_14: -13.055908376177461
+                distmed_15: -4.98200049433266
+                distmed_16: -1.2885410822888828
+                distmed_17: -3.0998999984702293
+                distmed_18: 4.102087431601657
+                distmed_19: -4.731027672389249
+                distmed_2: -16.343900572265582
+                distmed_20: -13.52785016003086
+                distmed_21: -15.926653820779585
+                distmed_22: -24.36429827475354
+                distmed_23: 29.99257613309645
+                distmed_24: 31.672465352147604
+                distmed_25: 8.967927903537726
+                distmed_26: 20.839845177444843
+                distmed_27: -2.021797477248339
+                distmed_28: -15.021022181530745
+                distmed_29: -18.42059226428641
+                distmed_3: 14.956131631475708
+                distmed_30: -16.340013626789787
+                distmed_31: -2.865115443950194
+                distmed_36: .nan
+                distmed_4: 8.655419777812298
+                distmed_5: -8.55898093703433
+                distmed_6: -3.103749244952995
+                distmed_7: -22.995864117661355
+                distmed_8: -11.568558635843198
+                distmed_9: -10.981353370406161
+                fwy_exit_dist_tdm_output: 14.172323287254217
+                mfdu_500: 12.542820766785484
+                np.log1p(real_far): 33.210408483818064
+                np.log1p(sqft_per_unit): -48.837641547841116
+                parcel_volume: -2.8234936602088783
+        fit_rsquared: 0.510613223442653
+        fit_rsquared_adj: 0.5099380034689611
+        fitted: true
+        name: MF Residential
+
+fitted: true

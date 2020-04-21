@@ -1,0 +1,107 @@
+name: rsh
+
+model_type: segmented_regression
+
+segmentation_col: general_type
+
+fit_filters:
+- county_id==4
+- building_type_id == 1
+- res_price_per_sqft > 10.0
+- res_price_per_sqft < 200.0
+- 5000> sqft_per_unit > 750
+- 2010 > year_built > 1850
+- residential_units < 100
+- building_sqft > 500
+- parcel_acres < 5
+- 75000 < improvement_value < 1000000
+
+predict_filters:
+- county_id==4
+- sqft_per_unit > 0
+- sqft_per_unit <= 12000
+- building_type_id == 1
+- residential_units > 0
+
+min_segment_size: 10
+
+default_config:
+    model_expression: np.log1p(res_price_per_sqft) ~ I(avg_building_age < 21) + I(year_built
+        < 1945) + np.log1p(university_dist) + np.log1p(sqft_per_unit) + ave_income_500
+        + parcel_volume + np.log1p(rail_stn_dist) + np.log1p(fwy_exit_dist_tdm_output)+
+        commute_time + distmed_32 + distmed_33 + distmed_34 + distmed_35 + distmed_36
+        + distmed_37 + distmed_38 + distmed_39 + distmed_40 + distmed_41
+    ytransform: np.exp
+
+models:
+    SF Residential:
+        fit_parameters:
+            Coefficient:
+                I(avg_building_age < 21)[T.True]: 0.17642680439583688
+                I(year_built < 1945)[T.True]: -0.03503543795508061
+                Intercept: 7.274933247460723
+                ave_income_500: 0.10263201153487189
+                commute_time: -0.005
+                distmed_32: -6.254422038513157e-16
+                distmed_33: 1.5620016854869628e-14
+                distmed_34: -3.530573149742702e-17
+                distmed_35: 1.0600192769640181e-16
+                distmed_36: -0.2635914822344423
+                distmed_37: -0.2116664774313175
+                distmed_38: -0.008288923195955533
+                distmed_39: 0.039204257531134434
+                distmed_40: -0.030826562453493578
+                distmed_41: -0.1651418464308691
+                np.log1p(fwy_exit_dist_tdm_output): -0.009336776742235153
+                np.log1p(rail_stn_dist): -0.15377201119988992
+                np.log1p(sqft_per_unit): -0.32426741857455244
+                np.log1p(university_dist): -0.08936657160865302
+                parcel_volume: 0.00046334386491245563
+            Std. Error:
+                I(avg_building_age < 21)[T.True]: 0.0014595725352355528
+                I(year_built < 1945)[T.True]: 0.002613437293462931
+                Intercept: 0.07402413988195308
+                ave_income_500: 0.0027959095700900685
+                commute_time: 0.0003737595769227688
+                distmed_32: 6.793693703017009e-18
+                distmed_33: 1.6472085418082513e-16
+                distmed_34: 4.767740071222909e-19
+                distmed_35: 1.3797237717887494e-18
+                distmed_36: 0.00854658480456123
+                distmed_37: 0.0075396106461888745
+                distmed_38: 0.006780745393690671
+                distmed_39: 0.006733906348925745
+                distmed_40: 0.004401287111247116
+                distmed_41: 0.00257814153719653
+                np.log1p(fwy_exit_dist_tdm_output): 0.002017045421898266
+                np.log1p(rail_stn_dist): 0.005233446128260254
+                np.log1p(sqft_per_unit): 0.002001155485175624
+                np.log1p(university_dist): 0.002100183708206275
+                parcel_volume: 5.82760274096719e-05
+            T-Score:
+                I(avg_building_age < 21)[T.True]: 120.87566745517329
+                I(year_built < 1945)[T.True]: -13.405884289902726
+                Intercept: 98.27784907818071
+                ave_income_500: 36.7079152461879
+                commute_time: 25.59566989584005
+                distmed_32: -92.0621728314839
+                distmed_33: 94.82719679028915
+                distmed_34: -74.05129258309424
+                distmed_35: 76.82836946338549
+                distmed_36: -30.84173248872065
+                distmed_37: -28.073926806593224
+                distmed_38: -1.2224206506364605
+                distmed_39: 5.8219190317947715
+                distmed_40: -7.0039880776509476
+                distmed_41: -64.05460834801346
+                np.log1p(fwy_exit_dist_tdm_output): -4.628937276706539
+                np.log1p(rail_stn_dist): -29.382553566288088
+                np.log1p(sqft_per_unit): -162.04009182529578
+                np.log1p(university_dist): -42.551787855253494
+                parcel_volume: 7.950848496504685
+        fit_rsquared: 0.500422639793795
+        fit_rsquared_adj: 0.500324720568363
+        fitted: true
+        name: SF Residential
+
+fitted: true

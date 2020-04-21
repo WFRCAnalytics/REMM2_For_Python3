@@ -1,0 +1,154 @@
+name: nrh_ofc
+
+model_type: segmented_regression
+
+segmentation_col: general_type
+
+fit_filters:
+- unit_price_non_residential > 50
+- unit_price_non_residential < 400
+- year_built > 1880
+- year_built < 2015
+- building_sqft > 250
+- sale_lease == 'lease'
+- general_type == 'Office'
+- zone_id > 0
+- node_id > 0
+- lease_type == 'FS'
+- building_age < 200
+
+predict_filters:
+- county_id==1
+- building_type_id==5
+- zone_id > 0
+
+min_segment_size: 10
+
+default_config:
+    model_expression: np.log1p(unit_price_non_residential) ~ np.log1p(real_far) +
+        land_value_per_acre + np.log1p(building_age) + median_income + logsum_hhinc4
+        + jobs_6_500 + np.log1p(fwy_exit_dist_tdm_output) + parcel_volume + distmed_6
+        + distmed_8 + distmed_9 + distmed_10 + distmed_11 + distmed_12 + distmed_13  +
+        distmed_15 + distmed_16 + distmed_17 + distmed_18 + distmed_19 + distmed_20
+        + distmed_21 + distmed_22 + distmed_26 + distmed_27 + distmed_28 + distmed_29
+        + distmed_30 + distmed_31 + distmed_32 + distmed_33 + distmed_34 + distmed_35
+        + distmed_36+ parcel_volume
+    ytransform: np.exp
+
+models:
+    Office:
+        fit_parameters:
+            Coefficient:
+                Intercept: 5.229262193897194
+                distmed_10: 0.05393914643048735
+                distmed_11: -5.9626617884168976e-15
+                distmed_12: 0.06632271880796213
+                distmed_13: -0.07914731674453122
+                distmed_15: -0.016108561694806806
+                distmed_16: -0.10537457585214344
+                distmed_17: 0.04753528652860086
+                distmed_18: 9.662199139599825e-16
+                distmed_19: 0.0791175379740503
+                distmed_20: 0.1386527223319815
+                distmed_21: 0.07708438954136484
+                distmed_22: -0.06309015699485161
+                distmed_26: 0.030710404657192446
+                distmed_27: 6.0175676345675825e-18
+                distmed_28: 0.0
+                distmed_29: 0.0
+                distmed_30: -0.12386586282432668
+                distmed_31: -0.03371614126174455
+                distmed_32: -0.06413173384429277
+                distmed_33: 0.04283946840007775
+                distmed_34: 0.07066872400705793
+                distmed_35: -0.08924208549688305
+                distmed_36: 0.0
+                distmed_6: -2.0798368215189909e-13
+                distmed_8: -5.797609263304292e-14
+                distmed_9: 0.08169197563523997
+                jobs_6_500: 0.030813770629855842
+                land_value_per_acre: 3.961810757935802e-08
+                logsum_hhinc4: 8.394609991015721e-06
+                median_income: 1.3746358638438906e-06
+                np.log1p(building_age): -0.12578729882962697
+                np.log1p(fwy_exit_dist_tdm_output): -0.07835248372143942
+                np.log1p(real_far): 0.04034121061559104
+                parcel_volume: 0.0008444007433916711
+            Std. Error:
+                Intercept: 0.06700952210125999
+                distmed_10: 0.09513746701835371
+                distmed_11: 2.647200913405631e-13
+                distmed_12: 0.22417668994205595
+                distmed_13: 0.13106056175076694
+                distmed_15: 0.10260265408443775
+                distmed_16: 0.05304775899117479
+                distmed_17: 0.06964782248044397
+                distmed_18: 6.390548526155008e-14
+                distmed_19: 0.22668345580906407
+                distmed_20: 0.11375967735960316
+                distmed_21: 0.0934695154810664
+                distmed_22: 0.03241867281572335
+                distmed_26: 0.03128419353407589
+                distmed_27: 3.6090368185576627e-16
+                distmed_28: 0.0
+                distmed_29: 0.0
+                distmed_30: 0.0619185461877317
+                distmed_31: 0.03941476800006352
+                distmed_32: 0.05239840608030109
+                distmed_33: 0.027159277726085784
+                distmed_34: 0.03883375102576392
+                distmed_35: 0.08184210842093298
+                distmed_36: 0.0
+                distmed_6: 9.821027015718058e-12
+                distmed_8: 2.738181508843363e-12
+                distmed_9: 0.09526443822595947
+                jobs_6_500: 0.004496600567389577
+                land_value_per_acre: 1.0456845079491942e-08
+                logsum_hhinc4: 2.4247652014586344e-06
+                median_income: 2.983633052826583e-07
+                np.log1p(building_age): 0.009810322517033586
+                np.log1p(fwy_exit_dist_tdm_output): 0.029426362705254304
+                np.log1p(real_far): 0.009709953676402464
+                parcel_volume: 0.0002721428546380265
+            T-Score:
+                Intercept: 78.03759868627488
+                distmed_10: 0.5669600854527851
+                distmed_11: -0.022524402126871124
+                distmed_12: 0.2958502011297646
+                distmed_13: -0.6038988059202949
+                distmed_15: -0.15699946398608874
+                distmed_16: -1.9864095648163747
+                distmed_17: 0.6825092994393045
+                distmed_18: 0.015119514545668065
+                distmed_19: 0.34902210967125524
+                distmed_20: 1.2188213394249485
+                distmed_21: 0.8247008572220469
+                distmed_22: -1.9461054853625073
+                distmed_26: 0.9816588247269838
+                distmed_27: 0.016673611096526524
+                distmed_28: .nan
+                distmed_29: .nan
+                distmed_30: -2.00046464994149
+                distmed_31: -0.8554189957857982
+                distmed_32: -1.2239252802081468
+                distmed_33: 1.5773419614517785
+                distmed_34: 1.8197758944319689
+                distmed_35: -1.090417722841282
+                distmed_36: .nan
+                distmed_6: -0.021177386216230918
+                distmed_8: -0.021173210192896467
+                distmed_9: 0.8575285505959032
+                jobs_6_500: 6.852681301809344
+                land_value_per_acre: 3.788724732764513
+                logsum_hhinc4: 3.4620300497408514
+                median_income: 4.607255113163503
+                np.log1p(building_age): -12.821933082344996
+                np.log1p(fwy_exit_dist_tdm_output): -2.662662881792352
+                np.log1p(real_far): 4.154624415318266
+                parcel_volume: 3.102784912412259
+        fit_rsquared: 0.3329008311438467
+        fit_rsquared_adj: 0.3158796550984493
+        fitted: true
+        name: Office
+
+fitted: true

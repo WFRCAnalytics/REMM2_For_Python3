@@ -1,0 +1,812 @@
+name: networks
+
+desc: Neighborhood Accessibility Variables
+
+model_type: networks
+
+node_col: node_id
+
+variable_definitions:  
+  - name: train_stn_1500
+    dataframe: parcels
+    varname: train_station
+    radius: 1500
+    apply: np.log1p
+
+  - name: train_stn_500
+    dataframe: parcels
+    varname: train_station
+    radius: 500
+    apply: np.log1p
+
+  - name: jobs_7_1000
+    dataframe: jobs
+    filters:
+    - sector_id == 7
+    radius: 1000
+    apply: np.log1p 
+
+  - name: jobs_7_500
+    dataframe: jobs
+    filters:
+    - sector_id == 7
+    radius: 500
+    apply: np.log1p
+
+  - name: jobs_ind_500
+    dataframe: jobs
+    filters:
+    - (sector_id == 5)|(sector_id == 8)|(sector_id == 10)
+    radius: 500
+    apply: np.log1p 
+
+  - name: jobs_ind_1000
+    dataframe: jobs
+    filters:
+    - (sector_id == 5)|(sector_id == 8)|(sector_id == 10)
+    radius: 1000
+    apply: np.log1p     
+
+  - name: jobs_ind_1500
+    dataframe: jobs
+    filters:
+    - (sector_id == 5)|(sector_id == 8)|(sector_id == 10)
+    radius: 1500
+    apply: np.log1p 
+
+  - name: jobs_ofc_500
+    dataframe: jobs
+    filters:
+    - (sector_id == 3)|(sector_id == 4)|(sector_id == 6)
+    radius: 500
+    apply: np.log1p   
+ 
+  - name: jobs_ofc_1000
+    dataframe: jobs
+    filters:
+    - (sector_id == 3)|(sector_id == 4)|(sector_id == 6)
+    radius: 1000
+    apply: np.log1p  
+
+  - name: jobs_ofc_1500
+    dataframe: jobs
+    filters:
+    - (sector_id == 3)|(sector_id == 4)|(sector_id == 6)
+    radius: 1500
+    apply: np.log1p     
+
+  - name: bus_stop_1500
+    dataframe: parcels
+    varname: bus_stop
+    radius: 1500
+    apply: np.log1p
+
+  - name: bus_stop_200
+    dataframe: parcels
+    varname: bus_stop
+    radius: 200
+    apply: np.log1p
+
+  - name: ave_sqft_per_unit
+    dataframe: buildings
+    varname: sqft_per_unit
+    filters:
+    - (building_type_id < 3)&(building_type_id > 0)&(sqft_per_unit > 400)&(year_built > 1940)&(sqft_per_unit < 6000)
+    radius: 1500
+    decay: flat
+    aggregation: ave
+
+  - name: ave_sqft_per_unit_500
+    dataframe: buildings
+    varname: sqft_per_unit
+    filters:
+    - (building_type_id < 3)&(building_type_id > 0)&(sqft_per_unit > 400)&(year_built > 1940)&(sqft_per_unit < 6000)
+    radius: 500
+    apply: np.log1p
+    decay: flat
+    aggregation: ave
+
+  - name: ave_lot_size_per_unit
+    dataframe: buildings
+    varname: lot_size_per_unit
+    filters:
+    - (building_type_id < 3)&(building_type_id > 0)
+    radius: 1500
+    apply: np.log1p
+    decay: flat
+    aggregation: ave
+
+  - name: ave_lot_size_per_unit_500
+    dataframe: buildings
+    varname: lot_size_per_unit
+    filters:
+    - (building_type_id < 3)&(building_type_id > 0)
+    radius: 500
+    apply: np.log1p
+    decay: flat
+    aggregation: ave
+
+  - name: ave_income_1500
+    dataframe: households
+    varname: income
+    radius: 1500
+    aggregation: ave
+    decay: flat
+    apply: np.log1p
+
+  - name: ave_income_1000
+    dataframe: households
+    varname: income
+    radius: 1000
+    aggregation: ave
+    decay: flat
+    apply: np.log1p
+
+  - name: ave_income_500
+    dataframe: households
+    varname: income
+    radius: 500
+    aggregation: ave
+    decay: flat
+    apply: np.log1p
+    
+  - name: sfdu_1500
+    dataframe: buildings
+    filters:
+    - building_type_id == 1
+    radius: 1500
+    apply: np.log1p
+
+  - name: sfdu_1000
+    dataframe: buildings
+    filters:
+    - building_type_id == 1
+    radius: 1000
+    apply: np.log1p
+
+  - name: sfdu_500
+    dataframe: buildings
+    filters:
+    - building_type_id == 1
+    radius: 500
+    apply: np.log1p
+
+  - name: mfdu_1500
+    dataframe: buildings
+    varname: residential_units
+    filters:
+    - building_type_id == 2
+    radius: 1500
+    apply: np.log1p
+
+  - name: mfdu_500
+    dataframe: buildings
+    varname: residential_units
+    filters:
+    - building_type_id == 2
+    radius: 500
+    apply: np.log1p
+
+  - name: mfdu_1000
+    dataframe: buildings
+    varname: residential_units
+    filters:
+    - building_type_id == 2
+    radius: 1000
+    apply: np.log1p
+    
+  - name: high_income_1500
+    dataframe: households
+    filters:
+    - income > 100000
+    varname: persons
+    radius: 1500
+    apply: np.log1p
+    
+  - name: high_income_1000
+    dataframe: households
+    filters:
+    - income > 100000
+    varname: persons
+    radius: 1000
+    apply: np.log1p
+    
+  - name: low_income_1500
+    dataframe: households
+    filters:
+    - income < 30000
+    varname: persons
+    radius: 1500
+    apply: np.log1p
+
+  - name: low_income_1000
+    dataframe: households
+    filters:
+    - income < 30000
+    varname: persons
+    radius: 1000
+    apply: np.log1p
+
+  - name: low_income_500
+    dataframe: households
+    filters:
+    - income < 30000
+    varname: persons
+    radius: 500
+    apply: np.log1p
+
+  - name: jobs_1500
+    dataframe: jobs
+    radius: 1500
+    apply: np.log1p
+
+  - name: jobs_500
+    dataframe: jobs
+    radius: 500
+    apply: np.log1p
+
+  - name: jobs_200
+    dataframe: jobs
+    radius: 200
+    apply: np.log1p
+
+  - name: jobs_1_1500
+    dataframe: jobs
+    filters:
+    - sector_id == 1
+    radius: 1500
+    apply: np.log1p
+
+  - name: jobs_1_500
+    dataframe: jobs
+    filters:
+    - sector_id == 1
+    radius: 500
+    apply: np.log1p
+
+  - name: jobs_2_1500
+    dataframe: jobs
+    filters:
+    - sector_id == 2
+    radius: 1500
+    apply: np.log1p
+
+  - name: jobs_2_1000
+    dataframe: jobs
+    filters:
+    - sector_id == 2
+    radius: 1000
+    apply: np.log1p
+
+  - name: jobs_2_500
+    dataframe: jobs
+    filters:
+    - sector_id == 2
+    radius: 500
+    apply: np.log1p
+
+  - name: jobs_3_1500
+    dataframe: jobs
+    filters:
+    - sector_id == 3
+    radius: 1500
+    apply: np.log1p
+
+  - name: jobs_4_1500
+    dataframe: jobs
+    filters:
+    - sector_id == 4
+    radius: 1500
+    apply: np.log1p
+
+  - name: jobs_4_500
+    dataframe: jobs
+    filters:
+    - sector_id == 4
+    radius: 500
+    apply: np.log1p
+
+  - name: jobs_5_1500
+    dataframe: jobs
+    filters:
+    - sector_id == 5
+    radius: 1500
+    apply: np.log1p
+
+  - name: jobs_5_500
+    dataframe: jobs
+    filters:
+    - sector_id == 5
+    radius: 500
+    apply: np.log1p
+
+  - name: jobs_6_1500
+    dataframe: jobs
+    filters:
+    - sector_id == 6
+    radius: 1500
+    apply: np.log1p
+
+  - name: jobs_6_500
+    dataframe: jobs
+    filters:
+    - sector_id == 6
+    radius: 500
+    apply: np.log1p
+
+  - name: jobs_7_1500
+    dataframe: jobs
+    filters:
+    - sector_id == 7
+    radius: 1500
+    apply: np.log1p
+
+  - name: jobs_8_1500
+    dataframe: jobs
+    filters:
+    - sector_id == 8
+    radius: 1500
+    apply: np.log1p
+
+  - name: jobs_9_1500
+    dataframe: jobs
+    filters:
+    - sector_id == 9
+    radius: 1500
+    apply: np.log1p
+
+  - name: jobs_9_500
+    dataframe: jobs
+    filters:
+    - sector_id == 9
+    radius: 500
+    apply: np.log1p
+
+  - name: jobs_10_1500
+    dataframe: jobs
+    filters:
+    - sector_id == 10
+    radius: 1500
+    apply: np.log1p
+
+  - name: jobs_10_500
+    dataframe: jobs
+    filters:
+    - sector_id == 10
+    radius: 500
+    apply: np.log1p
+
+  - name: jobs_3_1000
+    dataframe: jobs
+    filters:
+    - sector_id == 3
+    radius: 1000
+    apply: np.log1p
+
+  - name: jobs_5_1000
+    dataframe: jobs
+    filters:
+    - sector_id == 5
+    radius: 1000
+    apply: np.log1p
+    
+  - name: jobs_6_1000
+    dataframe: jobs
+    filters:
+    - sector_id == 6
+    radius: 1000
+    apply: np.log1p
+    
+  - name: jobs_8_1000
+    dataframe: jobs
+    filters:
+    - sector_id == 8
+    radius: 1000
+    apply: np.log1p
+    
+  - name: industrial_sqft_1000
+    dataframe: buildings
+    varname: non_residential_sqft
+    filters:
+    - (building_type_id == 3)
+    decay: flat
+    radius: 1000
+
+  - name: workers_1500
+    dataframe: households
+    varname: workers
+    radius: 1500
+    apply: np.log1p
+    
+  - name: fwy_exit_1500
+    dataframe: parcels
+    varname: fwy_exit
+    radius: 1500
+    apply: np.log1p
+
+  - name: fwy_exit_1000
+    dataframe: parcels
+    varname: fwy_exit
+    radius: 1000
+    apply: np.log1p
+
+  - name: train_stn_1000
+    dataframe: parcels
+    varname: train_station
+    radius: 1000
+    apply: np.log1p
+
+  - name: train_stn_500
+    dataframe: parcels
+    varname: train_station
+    radius: 500
+    apply: np.log1p
+
+  - name: rail_depot_1000
+    dataframe: parcels
+    varname: rail_depot
+    radius: 1000
+    apply: np.log1p
+
+
+  - name: ave_children_500
+    dataframe: households
+    varname: children
+    radius: 500
+    aggregation: ave
+    decay: flat
+    apply: np.log1p
+
+
+  - name: sum_nonresidential_units_500
+    dataframe: buildings
+    varname: job_spaces
+    radius: 500
+    apply: np.log1p
+
+  - name: stream_200
+    dataframe: parcels
+    varname: stream
+    radius: 200
+    apply: np.log1p
+
+  - name: trail_200
+    dataframe: parcels
+    varname: trail
+    radius: 200
+    apply: np.log1p
+
+  - name: trail_500
+    dataframe: parcels
+    varname: trail
+    radius: 500
+    apply: np.log1p
+
+  - name: trail_1000
+    dataframe: parcels
+    varname: trail
+    radius: 1000
+    apply: np.log1p
+ 
+comment:
+
+  - name: residential_sqft_1000
+    dataframe: buildings
+    varname: residential_sqft
+    filters:
+    - (building_type_id < 3)&(building_type_id > 0)
+    decay: flat
+    radius: 1000
+    
+  - name: sf_residential_sqft_1000
+    dataframe: buildings
+    varname: residential_sqft
+    filters:
+    - (building_type_id == 1)
+    decay: flat
+    radius: 1000
+    
+  - name: mf_residential_sqft_1000
+    dataframe: buildings
+    varname: residential_sqft
+    filters:
+    - (building_type_id == 2)
+    decay: flat
+    radius: 1000    
+    
+  - name: retail_sqft_1000
+    dataframe: buildings
+    varname: non_residential_sqft
+    filters:
+    - (building_type_id == 4)
+    decay: flat
+    radius: 1000
+    
+  - name: office_sqft_1000
+    dataframe: buildings
+    varname: non_residential_sqft
+    filters:
+    - (building_type_id == 5)
+    decay: flat
+    radius: 1000
+    
+  - name: govt_edu_sqft_1000
+    dataframe: buildings
+    varname: non_residential_sqft
+    filters:
+    - (building_type_id == 6)
+    decay: flat
+    radius: 1000
+    
+  - name: mixeduse_sqft_1000
+    dataframe: buildings
+    varname: non_residential_sqft
+    filters:
+    - (building_type_id == 7)
+    decay: flat
+    radius: 1000
+    
+  - name: other_sqft_1000
+    dataframe: buildings
+    varname: non_residential_sqft
+    filters:
+    - (building_type_id == 8)
+    decay: flat
+    radius: 1000
+
+  - name: sum_land_value_1500
+    dataframe: parcels
+    varname: land_value
+    radius: 1500
+    apply: np.log1p
+  
+  - name: sum_residential_units_1500
+    dataframe: buildings
+    varname: residential_units
+    radius: 1500
+    apply: np.log1p
+    
+  - name: sum_residential_units_1000
+    dataframe: buildings
+    varname: residential_units
+    radius: 1000
+    apply: np.log1p
+
+  - name: jobs_1000
+    dataframe: jobs
+    radius: 1000
+    apply: np.log1p
+    
+  - name: ave_workers_1500
+    dataframe: households
+    varname: workers
+    radius: 1500
+    aggregation: ave
+    decay: flat
+    apply: np.log1p
+    
+  - name: ave_cars_1000
+    dataframe: households
+    varname: cars
+    radius: 1000
+    aggregation: ave
+    decay: flat
+    apply: np.log1p
+
+  - name: ave_cars_1500
+    dataframe: households
+    varname: cars
+    radius: 1500
+    aggregation: ave
+    decay: flat
+    apply: np.log1p
+    
+  - name: ave_children_1000
+    dataframe: households
+    varname: children
+    radius: 1000
+    aggregation: ave
+    decay: flat
+    apply: np.log1p
+
+  - name: ave_children_1500
+    dataframe: households
+    varname: children
+    radius: 1500
+    aggregation: ave
+    decay: flat
+    apply: np.log1p
+
+  - name: sum_nonresidential_units_1500
+    dataframe: buildings
+    varname: job_spaces
+    radius: 1500
+    apply: np.log1p
+
+  - name: sum_nonresidential_units_1000
+    dataframe: buildings
+    varname: job_spaces
+    radius: 1000
+    apply: np.log1p
+
+  - name: ave_sqft_per_unit_1000
+    dataframe: buildings
+    varname: sqft_per_unit
+    filters:
+    - (building_type_id < 3)&(building_type_id > 0)
+    - (residential_sqft > 500)
+    radius: 1000
+    apply: np.log1p
+    decay: flat
+    aggregation: ave
+    
+  - name: ave_sf_sqft_per_unit
+    dataframe: buildings
+    varname: sqft_per_unit
+    filters:
+    - (building_type_id == 1)&(sqft_per_unit>0)
+    radius: 1500
+    apply: np.log1p
+    decay: flat
+    aggregation: ave
+
+  - name: ave_mf_sqft_per_unit
+    dataframe: buildings
+    varname: sqft_per_unit
+    filters:
+    - (building_type_id == 2)&(sqft_per_unit>0)
+    radius: 1500
+    apply: np.log1p
+    decay: flat
+    aggregation: ave
+
+  - name: ave_lot_size_per_unit_1000
+    dataframe: buildings
+    varname: lot_size_per_unit
+    filters:
+    - (building_type_id < 3)&(building_type_id > 0)
+    radius: 1000
+    apply: np.log1p
+    decay: flat
+    aggregation: ave
+    
+  - name: ave_hhsize_1500
+    dataframe: households
+    varname: persons
+    radius: 1500
+    aggregation: ave
+    decay: flat
+    apply: np.log1p
+
+  - name: ave_hhsize_1000
+    dataframe: households
+    varname: persons
+    radius: 1000
+    aggregation: ave
+    decay: flat
+    apply: np.log1p
+    
+  - name: population_1500
+    dataframe: households
+    varname: persons
+    radius: 1500
+    apply: np.log1p
+
+  - name: population_1000
+    dataframe: households
+    varname: persons
+    radius: 1000
+    apply: np.log1p
+
+  - name: high_income_500
+    dataframe: households
+    filters:
+    - income > 100000
+    varname: persons
+    radius: 500
+    apply: np.log1p
+
+    
+  - name: jobs_1_1000
+    dataframe: jobs
+    filters:
+    - sector_id == 1
+    radius: 1000
+    apply: np.log1p
+    
+  - name: jobs_2_1000
+    dataframe: jobs
+    filters:
+    - sector_id == 2
+    radius: 1000
+    apply: np.log1p
+
+  - name: jobs_4_1000
+    dataframe: jobs
+    filters:
+    - sector_id == 4
+    radius: 1000
+    apply: np.log1p
+    
+  - name: jobs_9_1000
+    dataframe: jobs
+    filters:
+    - sector_id == 9
+    radius: 1000
+    apply: np.log1p
+    
+  - name: jobs_10_1000
+    dataframe: jobs
+    filters:
+    - sector_id == 10
+    radius: 1000
+    apply: np.log1p
+
+
+  - name: trail_1500
+    dataframe: parcels
+    varname: trail
+    radius: 1500
+    apply: np.log1p
+
+    
+  - name: fwy_exit_1000
+    dataframe: parcels
+    varname: fwy_exit
+    radius: 1000
+    apply: np.log1p
+    
+  - name: airport_1500
+    dataframe: parcels
+    varname: airport
+    radius: 1500
+    apply: np.log1p
+
+  - name: airport_1000
+    dataframe: parcels
+    varname: airport
+    radius: 1000
+    apply: np.log1p
+    
+  - name: rail_depot_1500
+    dataframe: parcels
+    varname: rail_depot
+    radius: 1500
+    apply: np.log1p
+
+  - name: stream_1500
+    dataframe: parcels
+    varname: stream
+    radius: 1500
+    apply: np.log1p
+
+  - name: stream_1000
+    dataframe: parcels
+    varname: stream
+    radius: 1000
+    apply: np.log1p
+
+  - name: university_1500
+    dataframe: parcels
+    varname: university
+    radius: 1500
+    apply: np.log1p
+
+  - name: university_1000
+    dataframe: parcels
+    varname: university
+    radius: 1000
+    apply: np.log1p
+
+  - name: bus_stop_1000
+    dataframe: parcels
+    varname: bus_stop
+    radius: 1000
+    apply: np.log1p
+    
+  - name: renters
+    dataframe: households
+    filters:
+    - tenure == 2
+    radius: 1500
+    apply: np.log1p

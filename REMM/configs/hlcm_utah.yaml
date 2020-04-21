@@ -1,0 +1,165 @@
+name: hlcm
+
+model_type: segmented_locationchoice
+
+segmentation_col: income_quartile
+
+choosers_fit_filters:
+- building_id > 0
+- parcel_id > 0
+- income > 0
+- county_id > 0
+- county_id == 4
+- b_year_built > 2000
+
+choosers_predict_filters:
+- cid == 4
+
+alts_fit_filters:
+- parcel_id > 0
+- building_type_id > 0
+- building_type_id < 3
+- residential_units > 0
+- sqft_per_unit > 0
+- res_price_per_sqft > 0
+- county_id == 4
+- building_age > 0
+
+alts_predict_filters:
+- county_id == 4
+- res_price_per_sqft > -1
+
+interaction_predict_filters: null
+
+choice_column: null
+
+sample_size: 50
+
+estimation_sample_size: 15000
+
+default_config:
+    model_expression: np.log1p(proportion_workers * ave_hhpropwkrs_zn)
+
+models:
+    1:
+        fit_parameters:
+            Coefficient:
+                commute_time_20: 0.050733920042256325
+                mfdu_500: 0.29243512395194005
+                np.log1p(elevation): -1.4606466411655357
+                np.log1p(sqft_per_unit): -0.5005644338687377
+                parcel_volume: -0.011649757815437908
+            Std. Error:
+                commute_time_20: 0.003109183049609001
+                mfdu_500: 0.007304653953294015
+                np.log1p(elevation): 0.019091932612751012
+                np.log1p(sqft_per_unit): 0.01600454097166894
+                parcel_volume: 0.0006879265132282475
+            T-Score:
+                commute_time_20: 16.317443917828005
+                mfdu_500: 40.03408317789882
+                np.log1p(elevation): -76.5059604384947
+                np.log1p(sqft_per_unit): -31.27640053874905
+                parcel_volume: -16.93459634339261
+        fitted: true
+        log_likelihoods:
+            convergence: -21947.108770624305
+            'null': -24008.085184314106
+            ratio: 0.08584509751058189
+        model_expression: np.log1p(sqft_per_unit) + parcel_volume + np.log1p(elevation)
+            + commute_time_20 + mfdu_500 -1
+        name: 1
+    2:
+        fit_parameters:
+            Coefficient:
+                building_age: -0.22036454098816463
+                commute_time_20: 0.010079573625646663
+                np.log1p(logsumjobs): -0.3417033687748219
+                np.log1p(res_price_per_sqft): 0.9083131469642433
+                parcel_volume: -0.003078836799551027
+            Std. Error:
+                building_age: 0.004718070117716376
+                commute_time_20: 0.0020924899358681884
+                np.log1p(logsumjobs): 0.013763987710013215
+                np.log1p(res_price_per_sqft): 0.0356469948540206
+                parcel_volume: 0.0007844476576758027
+            T-Score:
+                building_age: -46.706499795476695
+                commute_time_20: 4.817023706001519
+                np.log1p(logsumjobs): -24.82589900354494
+                np.log1p(res_price_per_sqft): 25.480777571402918
+                parcel_volume: -3.9248466987244823
+        fitted: true
+        log_likelihoods:
+            convergence: -27541.142378401615
+            'null': -36213.59696124825
+            ratio: 0.23948061807080168
+        model_expression: building_age + np.log1p(res_price_per_sqft) + np.log1p(logsumjobs)
+            + parcel_volume + commute_time_20 - 1
+        name: 2
+    3:
+        fit_parameters:
+            Coefficient:
+                commute_time_20: 0.025323991663178187
+                high_income_1000: 0.0008566058252185666
+                np.log1p(building_age): -1.4032593981108121
+                np.log1p(res_price_per_sqft): 0.6347612455542481
+                parcel_volume: -0.02541839971603238
+            Std. Error:
+                commute_time_20: 0.0017864081111639057
+                high_income_1000: 0.009950161526523602
+                np.log1p(building_age): 0.02265840295544361
+                np.log1p(res_price_per_sqft): 0.01567103253340677
+                parcel_volume: 0.0009605166616249129
+            T-Score:
+                commute_time_20: 14.175927384632587
+                high_income_1000: 0.08608964014656037
+                np.log1p(building_age): -61.93108141250014
+                np.log1p(res_price_per_sqft): 40.505387516814466
+                parcel_volume: -26.463257465031262
+        fitted: true
+        log_likelihoods:
+            convergence: -35641.969479863474
+            'null': -44151.091639255574
+            ratio: 0.1927273334239935
+        model_expression: np.log1p(res_price_per_sqft) + high_income_1000 + np.log1p(building_age)
+            + parcel_volume + commute_time_20 - 1
+        name: 3
+    4:
+        fit_parameters:
+            Coefficient:
+                commute_time: 0.08560905513409194
+                elevation: 0.0009759629854246269
+                high_income_1000: 0.6883372013452954
+                np.log1p(logsumjobs): -0.7145626863981298
+                np.log1p(logsumpopulation): 1.3533951279121001
+            Std. Error:
+                commute_time: 0.001841444782602573
+                elevation: 6.996638195890977e-05
+                high_income_1000: 0.015077086245841613
+                np.log1p(logsumjobs): 0.08913813524438699
+                np.log1p(logsumpopulation): 0.08503901919678492
+            T-Score:
+                commute_time: 46.49015595954928
+                elevation: 13.949027491485777
+                high_income_1000: 45.65452436376058
+                np.log1p(logsumjobs): -8.016352198069184
+                np.log1p(logsumpopulation): 15.914989856365468
+        fitted: true
+        log_likelihoods:
+            convergence: -35266.847067209506
+            'null': -38998.95734111085
+            ratio: 0.09569769369108572
+        model_expression: elevation  + high_income_1000 + np.log1p(logsumpopulation)
+            + np.log1p(logsumjobs) + commute_time - 1
+        name: 4
+
+fitted: true
+
+choice_mode: aggregate
+
+remove_alts: true
+
+probability_mode: single_chooser
+
+prediction_sample_size: null

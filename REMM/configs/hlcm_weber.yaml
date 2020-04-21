@@ -1,0 +1,175 @@
+name: hlcm
+
+model_type: segmented_locationchoice
+
+segmentation_col: income_quartile
+
+choosers_fit_filters:
+- building_id > 0
+- parcel_id > 0
+- income > 0
+- county_id > 0
+- county_id != 2
+- county_id != 4
+
+choosers_predict_filters:
+- cid == 3
+
+alts_fit_filters:
+- parcel_id > 0
+- building_type_id > 0
+- building_type_id < 3
+- residential_units > 0
+- sqft_per_unit > 0
+- res_price_per_sqft > 0
+
+alts_predict_filters:
+- county_id == 3
+- res_price_per_sqft > -1
+
+interaction_predict_filters: null
+
+choice_column: null
+
+sample_size: 50
+
+estimation_sample_size: 15000
+
+prediction_sample_size: null
+default_config:
+    model_expression: np.log1p(proportion_workers * ave_hhpropwkrs_zn)
+models:
+    1:
+        fit_parameters:
+            Coefficient:
+                commute_time: -0.05268487131667384
+                mfdu_500: 0.16801811151929022
+                np.log1p(is_mf): 2.3863366306868565
+                np.log1p(logsum_hhinc1): -1.362825735084555
+                np.log1p(sqft_per_unit): -0.11757159320708134
+                parcel_volume: -0.013001630006160936
+            Std. Error:
+                commute_time: 0.0029098704832765136
+                mfdu_500: 0.011872235171277844
+                np.log1p(is_mf): 0.06854561466084588
+                np.log1p(logsum_hhinc1): 0.017323274691501658
+                np.log1p(sqft_per_unit): 0.017468783938606746
+                parcel_volume: 0.001167611358233848
+            T-Score:
+                commute_time: -18.10557260863057
+                mfdu_500: 14.152188622894835
+                np.log1p(is_mf): 34.813848303704276
+                np.log1p(logsum_hhinc1): -78.67021445738094
+                np.log1p(sqft_per_unit): -6.730382241848168
+                parcel_volume: -11.13523769229811
+        fitted: true
+        log_likelihoods:
+            convergence: -17277.793883743878
+            'null': -19704.859878342606
+            ratio: 0.12317093395149126
+        model_expression: np.log1p(is_mf) + mfdu_500 + np.log1p(sqft_per_unit) + parcel_volume
+            + np.log1p(logsum_hhinc1) + commute_time -1
+        name: 1
+    2:
+        fit_parameters:
+            Coefficient:
+                building_age: -0.19952282885935357
+                elevation: -0.0011770741290793583
+                np.log1p(logsumjobs): 0.7091480325075576
+                np.log1p(res_price_per_sqft): -1.4252025014567031
+                np.log1p(sqft_per_unit): -1.2419953325492366
+                np.log1p(university_dist): -0.015749983652048705
+                parcel_volume: 0.0012939377101944597
+            Std. Error:
+                building_age: 0.003306612326062253
+                elevation: 0.0001254811008748365
+                np.log1p(logsumjobs): 0.03476245078105709
+                np.log1p(res_price_per_sqft): 0.051912855731826475
+                np.log1p(sqft_per_unit): 0.025549272706641184
+                np.log1p(university_dist): 0.035154985395275964
+                parcel_volume: 0.0010103161716720755
+            T-Score:
+                building_age: -60.34055679486304
+                elevation: -9.380489339613407
+                np.log1p(logsumjobs): 20.399828452083412
+                np.log1p(res_price_per_sqft): -27.453748813570797
+                np.log1p(sqft_per_unit): -48.61176859356927
+                np.log1p(university_dist): -0.44801565055308334
+                parcel_volume: 1.2807255258054415
+        fitted: true
+        log_likelihoods:
+            convergence: -27893.5109747441
+            'null': -41678.693099826975
+            ratio: 0.3307489054914753
+        model_expression: building_age + np.log1p(res_price_per_sqft) + elevation
+            + np.log1p(university_dist) + np.log1p(sqft_per_unit) + np.log1p(logsumjobs)
+            + parcel_volume - 1
+        name: 2
+    3:
+        fit_parameters:
+            Coefficient:
+                commute_time: -0.010651069040036015
+                np.log1p(building_age): -0.9243250173249984
+                np.log1p(elevation): -0.9299134343104356
+                np.log1p(logsum_hhinc1): -2.2703515456024306
+                np.log1p(logsumjobs): 1.4892232661312537
+                np.log1p(university_dist): 0.04338079441557433
+            Std. Error:
+                commute_time: 0.00256063371806987
+                np.log1p(building_age): 0.009585445320562155
+                np.log1p(elevation): 0.07687909989285702
+                np.log1p(logsum_hhinc1): 0.16519892796170313
+                np.log1p(logsumjobs): 0.1085160245634681
+                np.log1p(university_dist): 0.03311390996591907
+            T-Score:
+                commute_time: -4.15954416474078
+                np.log1p(building_age): -96.43005477713056
+                np.log1p(elevation): -12.095789825926872
+                np.log1p(logsum_hhinc1): -13.743137280701662
+                np.log1p(logsumjobs): 13.723533202787458
+                np.log1p(university_dist): 1.3100474833754747
+        fitted: true
+        log_likelihoods:
+            convergence: -46024.76411988049
+            'null': -58480.831908127344
+            ratio: 0.2129940252528415
+        model_expression: np.log1p(elevation) + np.log1p(logsumjobs) + np.log1p(logsum_hhinc1)
+            + np.log1p(building_age) + np.log1p(university_dist) + commute_time -
+            1
+        name: 3
+    4:
+        fit_parameters:
+            Coefficient:
+                np.log1p(logsum_hhinc4): -0.3384137366259754
+                np.log1p(res_price_per_sqft): 2.4091240409149983
+                np.log1p(sqft_per_unit): 1.6577492929457556
+                np.log1p(university_dist): 0.6856164432292642
+                parcel_volume: -0.013607283750902324
+            Std. Error:
+                np.log1p(logsum_hhinc4): 0.03702676776286679
+                np.log1p(res_price_per_sqft): 0.04936232360175046
+                np.log1p(sqft_per_unit): 0.01761480597564213
+                np.log1p(university_dist): 0.028146805909134164
+                parcel_volume: 0.000860628574857983
+            T-Score:
+                np.log1p(logsum_hhinc4): -9.139705058602548
+                np.log1p(res_price_per_sqft): 48.804915675192554
+                np.log1p(sqft_per_unit): 94.11112987779157
+                np.log1p(university_dist): 24.358587807178818
+                parcel_volume: -15.810866787856463
+        fitted: true
+        log_likelihoods:
+            convergence: -47729.63063704769
+            'null': -52053.37811021407
+            ratio: 0.08306372477904489
+        model_expression: np.log1p(sqft_per_unit) + np.log1p(res_price_per_sqft) +
+            np.log1p(logsum_hhinc4) + np.log1p(university_dist) + parcel_volume -
+            1
+        name: 4
+fitted: true
+
+choice_mode: aggregate
+
+remove_alts: true
+
+probability_mode: single_chooser

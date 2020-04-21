@@ -1,0 +1,165 @@
+name: nrh_ind
+
+model_type: segmented_regression
+
+segmentation_col: general_type
+
+fit_filters:
+- unit_price_non_residential > 3
+- unit_price_non_residential < 35
+- year_built > 1880
+- year_built < 2015
+- sale_lease == 'lease'
+- general_type == 'Industrial'
+- zone_id > 0
+- node_id > 0
+- lease_type == 'NNN'
+- building_age < 200
+
+predict_filters:
+- county_id==4
+- building_type_id==3
+- zone_id > 0
+
+min_segment_size: 10
+
+default_config:
+    model_expression: np.log1p(unit_price_non_residential) ~ rail_depot + np.log1p(building_age)
+        + np.log1p(real_far) + jobs_6_1000 + industrial_sqft_1000 + mfdu_1000 + jobs_8_1000
+        + parcel_volume + distmed_4 + distmed_5 + distmed_6 + distmed_7 + distmed_9
+        + distmed_10 + distmed_11 + distmed_12 + distmed_13 + distmed_14 + distmed_15
+        + distmed_16 + distmed_17 + distmed_18 + distmed_19 + distmed_20 + distmed_21
+        + distmed_25 + distmed_26 + distmed_27 + distmed_28 + distmed_29 + distmed_30
+        + distmed_31 + distmed_32 + distmed_33 + distmed_34 + distmed_35 + distmed_36
+        + distmed_37 + parcel_volume
+    ytransform: np.exp
+
+models:
+    Industrial:
+        fit_parameters:
+            Coefficient:
+                Intercept: 2.0523742598864305
+                distmed_10: 2.12001392560214e-16
+                distmed_11: -0.16194272775034535
+                distmed_12: 7.03423383221428e-17
+                distmed_13: -0.028041223690819052
+                distmed_14: -0.1548000517186922
+                distmed_15: -0.12619665022370008
+                distmed_16: 0.05605216914170325
+                distmed_17: -0.07888327539166323
+                distmed_18: 0.550795912747361
+                distmed_19: 0.006936331887149372
+                distmed_20: -0.1096662494929717
+                distmed_21: -0.0013156300775057825
+                distmed_25: -0.004826316556467874
+                distmed_26: -5.621293234325651e-18
+                distmed_27: 0.0
+                distmed_28: 0.0
+                distmed_29: 0.21059975222409932
+                distmed_30: -0.07031297945888415
+                distmed_31: 0.009551169845968238
+                distmed_32: 0.04659400794005082
+                distmed_33: 0.021728872122964427
+                distmed_34: -0.038031896528555986
+                distmed_35: 0.013907076410539121
+                distmed_36: 0.0
+                distmed_37: 0.0
+                distmed_4: 1.2877103945595637e-15
+                distmed_5: 3.8024914904247084e-16
+                distmed_6: 1.5743259293322506e-16
+                distmed_7: -0.18881722369089066
+                distmed_9: -0.12873929526886685
+                industrial_sqft_1000: -5.952138980425112e-08
+                jobs_6_1000: 0.024726907468392796
+                jobs_8_1000: 3.0574043591312483e-14
+                mfdu_1000: -0.016357288607852044
+                np.log1p(building_age): -0.07500299361369574
+                np.log1p(real_far): -0.022025108883084798
+                parcel_volume: 0.0008381680307898812
+                rail_depot: -0.08888305015319686
+            Std. Error:
+                Intercept: 0.03161928579523012
+                distmed_10: 1.0922777203930588e-16
+                distmed_11: 0.208091653717274
+                distmed_12: 2.8403093440290584e-16
+                distmed_13: 0.04003514577493516
+                distmed_14: 0.0706410007302595
+                distmed_15: 0.0942676448523304
+                distmed_16: 0.04428444004502109
+                distmed_17: 0.043338842708112925
+                distmed_18: 0.20780626003265837
+                distmed_19: 0.20722154789620365
+                distmed_20: 0.06453566513986038
+                distmed_21: 0.022224314578852225
+                distmed_25: 0.03271544668136452
+                distmed_26: 1.6852872237292416e-17
+                distmed_27: 0.0
+                distmed_28: 0.0
+                distmed_29: 0.20721420167785848
+                distmed_30: 0.044758002956779445
+                distmed_31: 0.03941555582419635
+                distmed_32: 0.03047707469962107
+                distmed_33: 0.04681509553359126
+                distmed_34: 0.20747067635107652
+                distmed_35: 0.20717457419665697
+                distmed_36: 0.0
+                distmed_37: 0.0
+                distmed_4: 5.411217284268959e-16
+                distmed_5: 2.872900135814945e-16
+                distmed_6: 1.9751590679374543e-16
+                distmed_7: 0.09387731401654878
+                distmed_9: 0.2072121972917926
+                industrial_sqft_1000: 8.188981297460113e-09
+                jobs_6_1000: 0.00483773506876282
+                jobs_8_1000: 1.6394212275415326e-14
+                mfdu_1000: 0.0043235913623879485
+                np.log1p(building_age): 0.008391565975034217
+                np.log1p(real_far): 0.010723585041938587
+                parcel_volume: 0.0003228124540865597
+                rail_depot: 0.01935539322952911
+            T-Score:
+                Intercept: 64.90893795570925
+                distmed_10: 1.9409110760212591
+                distmed_11: -0.7782278859217036
+                distmed_12: 0.24765731405284264
+                distmed_13: -0.7004151764166885
+                distmed_14: -2.1913626664179273
+                distmed_15: -1.3387058775191238
+                distmed_16: 1.265730560998822
+                distmed_17: -1.820151865220353
+                distmed_18: 2.650526084540471
+                distmed_19: 0.033473024198350985
+                distmed_20: -1.6993122989482674
+                distmed_21: -0.059197779658756444
+                distmed_25: -0.14752409170732966
+                distmed_26: -0.3335510502409629
+                distmed_27: .nan
+                distmed_28: .nan
+                distmed_29: 1.016338409813745
+                distmed_30: -1.5709588188459136
+                distmed_31: 0.2423198061336226
+                distmed_32: 1.5288215289451694
+                distmed_33: 0.4641424283193718
+                distmed_34: -0.18331215378215374
+                distmed_35: 0.06712733193474825
+                distmed_36: .nan
+                distmed_37: .nan
+                distmed_4: 2.3797055762352923
+                distmed_5: 1.3235724566339893
+                distmed_6: 0.7970628568038468
+                distmed_7: -2.0113189823220314
+                distmed_9: -0.621292071371544
+                industrial_sqft_1000: -7.2684730422711095
+                jobs_6_1000: 5.111257048376636
+                jobs_8_1000: 1.8649291028859714
+                mfdu_1000: -3.7832642441994806
+                np.log1p(building_age): -8.937901916857648
+                np.log1p(real_far): -2.0538941778283455
+                parcel_volume: 2.596455062929923
+                rail_depot: -4.592159358332978
+        fit_rsquared: 0.2566175164671367
+        fit_rsquared_adj: 0.2356443429505355
+        fitted: true
+        name: Industrial
+
+fitted: true
