@@ -1450,6 +1450,7 @@ def run_arcpy(year, settings,store):
         REMMdir = os.getcwd()
         b = sim.get_table('parcels').to_frame(['x','y','total_residential_units','total_job_spaces','county_id','gridID'])
         bdev = b[((b.total_residential_units >= 1) | (b.total_job_spaces >= 1))&(b.county_id == 4)]
+        bdev.to_csv('utahdevelopedparcels.csv')
         f = open('YEAR.txt', 'w')
         f.write(str(year))
         f.close()
