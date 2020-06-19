@@ -1,7 +1,10 @@
 aggregation_tables:
   - nodes
   - zones
-  
+
+remm:
+    indicator_years: [2015,2020,2030,2040,2050]
+    
 tdm:
   run_years:
     - 2015
@@ -9,9 +12,9 @@ tdm:
     - 2027
     - 2035
     - 2045
-  main_dir: E:/_TDMv8.3_REMM/REMM/REMM_
-  input_dir: E:/_TDMv8.3_REMM/1_Inputs/2_SEData/REMM
-  bat_dir: E:/_TDMv8.3_REMM/REMM
+  main_dir: TDM/_TDMv8.3_REMM/REMM/REMM_
+  input_dir: TDM/_TDMv8.3_REMM/1_Inputs/2_SEData/REMM
+  bat_dir: TDM/_TDMv8.3_REMM/REMM
   output_traveltime: 6_REMM/MinAuto_Trans_pk.dbf
   output_volume: 6_REMM/TwowayVolumeRoundTAZ.dbf
   output_logsum: 6_REMM/IJ_logsum.dbf

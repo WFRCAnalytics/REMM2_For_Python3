@@ -8,7 +8,7 @@ import os
 #sim.run(["travel_time_reset"])
 sim.run([
         "clear_cache",
-        #"run_arcpy",
+        "run_arcpy",
         "travel_time_import",
         "neighborhood_vars",      # neighborhood variables
         "households_transition",  # households transition
