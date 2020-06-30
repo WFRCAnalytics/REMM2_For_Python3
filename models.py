@@ -4,11 +4,11 @@ import string
 import os
 import _pickle as pickle
 import utils as wfrc_utils
-import orca.orca as sim
-from urbansim.utils import misc
+import orca_wfrc.orca as sim
+from urbansim_wfrc.utils import misc
 from urbansim_defaults import utils
 from urbansim_defaults import models
-from urbansim.developer import sqftproforma, developer
+from urbansim_wfrc.developer import sqftproforma, developer
 import subprocess
 import gc
     

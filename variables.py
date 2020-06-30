@@ -1,7 +1,7 @@
 import pandas as pd, numpy as np
 from urbansim_defaults import variables, utils
-from urbansim.utils import misc
-import orca.orca as sim
+from urbansim_wfrc.utils import misc
+import orca_wfrc.orca as sim
 import utils as wfrc_utils
 
 @sim.column('jobs', 'building_type_id')

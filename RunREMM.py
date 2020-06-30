@@ -1,6 +1,6 @@
 
 import datasources, models, variables, utils
-import orca.orca as sim
+import orca_wfrc.orca as sim
 import pandas as pd
 import numpy as np
 import os

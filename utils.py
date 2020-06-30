@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 import pysal as ps
 import os
-import orca.orca as sim
-from urbansim.utils import misc
-from urbansim.developer import sqftproforma, developer
-from urbansim.models import SegmentedMNLLocationChoiceModel
+import orca_wfrc.orca as sim
+from urbansim_wfrc.utils import misc
+from urbansim_wfrc.developer import sqftproforma, developer
+from urbansim_wfrc.models import SegmentedMNLLocationChoiceModel
 from urbansim_defaults import utils
 #import WFRCDeveloper
 import json
