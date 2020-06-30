@@ -1569,7 +1569,11 @@ def logsum_jobs3(jobs, travel_data):
     j = jobs.to_frame()
     j = j[(j.zone_id>0)&(j.sector_id==3)]
     td = travel_data.to_frame()
+    print(td.head()) #REMOVE
     jzone = j.groupby('zone_id').sector_id.count()
+    print(jzone) # REMOVE
+    print(tdprocess.to_zone_id) #REMOVE
+    print(jzone[tdprocess.to_zone_id].values) #REMOVE
     tdprocess = td.reset_index(level = 1)
     tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
