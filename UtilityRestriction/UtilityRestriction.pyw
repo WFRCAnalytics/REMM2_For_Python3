@@ -1,5 +1,6 @@
 #REMM Utility Constraint for Utah County, Developed by Xiao Li WFRC & Tim Hereth MAG.
 import arcpy
+import os
 print("Utility Restriction start")
 
 arcpy.env.overwriteOutput = True
@@ -17,7 +18,8 @@ point = "pointlyr"
 pointfeature = r"UtilityRestriction.gdb\utahdevpoint"
 arcpy.MakeXYEventLayer_management(tableall, "x", "y", point, spRef)
 
-arcpy.CopyFeatures_management(point,pointfeature)
+#arcpy.CopyFeatures_management(point,pointfeature)
+arcpy.FeatureClassToFeatureClass_conversion(point, os.path.dirname(pointfeature), os.path.basename(pointfeature))
 
 
 gridSum  = r"UtilityRestriction.gdb\gridSum"

@@ -1517,7 +1517,7 @@ def logsumjobs(jobs, travel_data):
     td = travel_data.to_frame()
     jzone = j.groupby('zone_id').size()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
+    tdprocess["attr"] = jzone.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1530,7 +1530,7 @@ def logsumpopulation(households, travel_data):
     p = pd.Series(data=p.persons, index=p.index)
     td = travel_data.to_frame()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = p[tdprocess.to_zone_id].values
+    tdprocess["attr"] =p.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1542,7 +1542,7 @@ def logsum_jobs1(jobs, travel_data):
     td = travel_data.to_frame()
     jzone = j.groupby('zone_id').sector_id.count()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
+    tdprocess["attr"] = jzone.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1558,7 +1558,7 @@ def logsum_jobs2(jobs, travel_data):
     jzone = j.groupby('zone_id').sector_id.count()
     tdprocess = td.reset_index(level = 1)
 
-    tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
+    tdprocess["attr"] = jzone.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1569,13 +1569,9 @@ def logsum_jobs3(jobs, travel_data):
     j = jobs.to_frame()
     j = j[(j.zone_id>0)&(j.sector_id==3)]
     td = travel_data.to_frame()
-    print(td.head()) #REMOVE
     jzone = j.groupby('zone_id').sector_id.count()
-    print(jzone) # REMOVE
-    print(tdprocess.to_zone_id) #REMOVE
-    print(jzone[tdprocess.to_zone_id].values) #REMOVE
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
+    tdprocess["attr"] = jzone.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1587,7 +1583,7 @@ def logsum_jobs4(jobs, travel_data):
     td = travel_data.to_frame()
     jzone = j.groupby('zone_id').sector_id.count()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
+    tdprocess["attr"] = jzone.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1599,7 +1595,7 @@ def logsum_jobs5(jobs, travel_data):
     td = travel_data.to_frame()
     jzone = j.groupby('zone_id').sector_id.count()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
+    tdprocess["attr"] = jzone.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1611,7 +1607,7 @@ def logsum_jobs6(jobs, travel_data):
     td = travel_data.to_frame()
     jzone = j.groupby('zone_id').sector_id.count()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
+    tdprocess["attr"] = jzone.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1623,7 +1619,7 @@ def logsum_jobs7(jobs, travel_data):
     td = travel_data.to_frame()
     jzone = j.groupby('zone_id').sector_id.count()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
+    tdprocess["attr"] = jzone.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1635,7 +1631,7 @@ def logsum_jobs8(jobs, travel_data):
     td = travel_data.to_frame()
     jzone = j.groupby('zone_id').sector_id.count()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
+    tdprocess["attr"] = jzone.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1647,7 +1643,7 @@ def logsum_jobs9(jobs, travel_data):
     td = travel_data.to_frame()
     jzone = j.groupby('zone_id').sector_id.count()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
+    tdprocess["attr"] = jzone.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1659,7 +1655,7 @@ def logsum_jobs10(jobs, travel_data):
     td = travel_data.to_frame()
     jzone = j.groupby('zone_id').sector_id.count()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = jzone[tdprocess.to_zone_id].values
+    tdprocess["attr"] = jzone.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1673,7 +1669,7 @@ def logsum_hhinc1(households, travel_data):
     hh = pd.Series(data=hh.persons, index=hh.index)
     td = travel_data.to_frame()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = hh[tdprocess.to_zone_id].values
+    tdprocess["attr"] =hh.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1687,7 +1683,7 @@ def logsum_hhinc2(households, travel_data):
     hh = pd.Series(data=hh.persons, index=hh.index)
     td = travel_data.to_frame()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = hh[tdprocess.to_zone_id].values
+    tdprocess["attr"] =hh.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1701,7 +1697,7 @@ def logsum_hhinc3(households, travel_data):
     hh = pd.Series(data=hh.persons, index=hh.index)
     td = travel_data.to_frame()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = hh[tdprocess.to_zone_id].values
+    tdprocess["attr"] =hh.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
@@ -1715,7 +1711,7 @@ def logsum_hhinc4(households, travel_data):
     hh = pd.Series(data=hh.persons, index=hh.index)
     td = travel_data.to_frame()
     tdprocess = td.reset_index(level = 1)
-    tdprocess["attr"] = hh[tdprocess.to_zone_id].values
+    tdprocess["attr"] =hh.reindex(tdprocess.to_zone_id).values
     tdprocess["attr1"] = tdprocess["attr"]*np.exp(tdprocess["log2"])
     logsum = tdprocess.groupby(level = 0).attr1.apply(np.sum)
     return logsum.fillna(0).astype('int')
