@@ -4,3 +4,5 @@ REMMRun/
 TDM/
 REMM_Base_Year_Data/
 RUNNUM
+__pycache__/
+urbansim_defaults/__pycache__/
