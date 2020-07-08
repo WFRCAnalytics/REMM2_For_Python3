@@ -1,0 +1,10 @@
+setup.py
+urbansim_defaults/__init__.py
+urbansim_defaults/datasources.py
+urbansim_defaults/models.py
+urbansim_defaults/utils.py
+urbansim_defaults/variables.py
+urbansim_defaults.egg-info/PKG-INFO
+urbansim_defaults.egg-info/SOURCES.txt
+urbansim_defaults.egg-info/dependency_links.txt
+urbansim_defaults.egg-info/top_level.txt

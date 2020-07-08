@@ -1,0 +1,13 @@
+Metadata-Version: 1.1
+Name: urbansim-defaults
+Version: 0.1.dev0
+Summary: Installs and runs the urbansim defaults.
+Home-page: https://github.com/synthicity/urbansim_defaults
+Author: Synthicity
+Author-email: support@synthicity.com
+License: BSD
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python :: 2.7
+Classifier: License :: OSI Approved :: BSD License
