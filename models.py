@@ -1469,7 +1469,7 @@ def run_arcpy(year, settings,store):
             try:
                 subprocess.call(r"UtilityRestriction.bat")
             except:
-                
+                print("Did not find arcgis python installation")
         else:
             import UtilityRestriction
         os.chdir(REMMdir)
