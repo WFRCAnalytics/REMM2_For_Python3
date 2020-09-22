@@ -3,3 +3,7 @@ utahdevelopedparcels.csv
 RUNNUM
 __pycache__/
 urbansim_defaults/__pycache__/
+REMMRun/
+UtilityRestriction/UtilityRestriction.gdb/
+TDM/
+REMM_Base_Year_Data/

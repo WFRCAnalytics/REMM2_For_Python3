@@ -1105,7 +1105,7 @@ def indicator_export(households, buildings, jobs, parcels, zones, distlrg, distm
         
             summary_geog['jobs'] = jobs.groupby(id_col).building_id.count()
             summary_geog['jobs1'] = jobs[jobs.sector_id==1].groupby(id_col).building_id.count()
-            #summary_geog['jobs1_prop'][summary_geog.county_id==1] = np.divide(summary_geog.jobs1, jobs[(jobs.sector_id==1)&(jobs.county_id==1)].sector_id.count())
+            #summary_geog['jobs1_prop'][summary_geog.county_id==11] = np.divide(summary_geog.jobs1, jobs[(jobs.sector_id==1)&(jobs.county_id==11)].sector_id.count())
             summary_geog['jobs2'] = jobs[jobs.sector_id==2].groupby(id_col).building_id.count()
             summary_geog['jobs3'] = jobs[jobs.sector_id==3].groupby(id_col).building_id.count()
             summary_geog['jobs4'] = jobs[jobs.sector_id==4].groupby(id_col).building_id.count()
@@ -1139,15 +1139,15 @@ def indicator_export(households, buildings, jobs, parcels, zones, distlrg, distm
                 znoadjust = summary_geog[summary_geog.pop_adjust == 0]
                 cadjust = zadjust.groupby("COUNTY").population.sum()
                 cnoadjust = znoadjust.groupby("COUNTY").population.sum()
-                adjust1 = (pop_control[pop_control.cid == 3].number_of_population.iloc[0] - cnoadjust[1])/cadjust[1]
-                adjust2 = (pop_control[pop_control.cid == 1].number_of_population.iloc[0] - cnoadjust[2])/cadjust[2]
-                adjust3 = (pop_control[pop_control.cid == 2].number_of_population.iloc[0] - cnoadjust[3])/cadjust[3]
-                adjust4 = (pop_control[pop_control.cid == 4].number_of_population.iloc[0] - cnoadjust[4])/cadjust[4]
+                adjust1 = (pop_control[pop_control.cid == 57].number_of_population.iloc[0] - cnoadjust[57])/cadjust[57]
+                adjust2 = (pop_control[pop_control.cid == 11].number_of_population.iloc[0] - cnoadjust[11])/cadjust[11]
+                adjust3 = (pop_control[pop_control.cid == 35].number_of_population.iloc[0] - cnoadjust[35])/cadjust[35]
+                adjust4 = (pop_control[pop_control.cid == 49].number_of_population.iloc[0] - cnoadjust[49])/cadjust[49]
                 zafteradjust = summary_geog.copy()
-                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 1)] =     zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 1)]*adjust1
-                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 2)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 2)]*adjust2
-                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 3)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 3)]*adjust3
-                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 4)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 4)]*adjust4
+                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 11)] =     zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 11)]*adjust1
+                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 35)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 35)]*adjust2
+                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 57)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 57)]*adjust3
+                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 49)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 49)]*adjust4
                 summary_geog = zafteradjust
                 #ENDADJUSTPOPULATION  
 
@@ -1192,10 +1192,10 @@ def travel_model_export_no_constuction(year, settings, jobs, households, buildin
     znoadjust = tdm_output[tdm_output.pop_adjust == 0]
     cadjust = zadjust.groupby("CO_FIPS").HHPOP.sum()
     cnoadjust = znoadjust.groupby("CO_FIPS").HHPOP.sum()
-    adjust57 = (pop_control[pop_control.cid == 3].number_of_population.iloc[0] - cnoadjust[57])*1.0/cadjust[57]
-    adjust11 = (pop_control[pop_control.cid == 1].number_of_population.iloc[0] - cnoadjust[11])*1.0/cadjust[11]
-    adjust35 = (pop_control[pop_control.cid == 2].number_of_population.iloc[0] - cnoadjust[35])*1.0/cadjust[35]
-    adjust49 = (pop_control[pop_control.cid == 4].number_of_population.iloc[0] - cnoadjust[49])*1.0/cadjust[49]            
+    adjust57 = (pop_control[pop_control.cid == 57].number_of_population.iloc[0] - cnoadjust[57])*1.0/cadjust[57]
+    adjust11 = (pop_control[pop_control.cid == 11].number_of_population.iloc[0] - cnoadjust[11])*1.0/cadjust[11]
+    adjust35 = (pop_control[pop_control.cid == 35].number_of_population.iloc[0] - cnoadjust[35])*1.0/cadjust[35]
+    adjust49 = (pop_control[pop_control.cid == 49].number_of_population.iloc[0] - cnoadjust[49])*1.0/cadjust[49]            
     zafteradjust = tdm_output.copy()
     zafteradjust.HHPOP[(zafteradjust.pop_adjust == 1) & (zafteradjust.CO_FIPS == 57)] = zafteradjust.HHPOP[(zafteradjust.pop_adjust == 1) & (zafteradjust.CO_FIPS == 57)]*adjust57
     zafteradjust.HHPOP[(zafteradjust.pop_adjust == 1) & (zafteradjust.CO_FIPS == 11)] = zafteradjust.HHPOP[(zafteradjust.pop_adjust == 1) & (zafteradjust.CO_FIPS == 11)]*adjust11
@@ -1209,10 +1209,10 @@ def travel_model_export_no_constuction(year, settings, jobs, households, buildin
     zhbj = tdm_output[(tdm_output.TOTHH > 0)]
     c_hbj_adjust = zhbj.groupby("CO_FIPS").TOTHH.sum()
     #first adjustment
-    hbj_adjust57 =  (hbj[hbj.cid == 3].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[57]
-    hbj_adjust11 =  (hbj[hbj.cid == 1].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[11]
-    hbj_adjust35 =  (hbj[hbj.cid == 2].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[35]
-    hbj_adjust49 =  (hbj[hbj.cid == 4].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[49]
+    hbj_adjust57 =  (hbj[hbj.cid == 57].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[57]
+    hbj_adjust11 =  (hbj[hbj.cid == 11].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[11]
+    hbj_adjust35 =  (hbj[hbj.cid == 35].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[35]
+    hbj_adjust49 =  (hbj[hbj.cid == 49].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[49]
     tdm_output["HBJ"] = 0
     tdm_output.HBJ[tdm_output.CO_FIPS == 57] = tdm_output.TOTHH[tdm_output.CO_FIPS == 57]*hbj_adjust57
     tdm_output.HBJ[tdm_output.CO_FIPS == 11] = tdm_output.TOTHH[tdm_output.CO_FIPS == 11]*hbj_adjust11
@@ -1221,10 +1221,10 @@ def travel_model_export_no_constuction(year, settings, jobs, households, buildin
     tdm_output.HBJ = np.round(tdm_output.HBJ)
     #second adjustment
     c_hbj_adjust = tdm_output.groupby("CO_FIPS").HBJ.sum()
-    hbj_adjust57 =  (hbj[hbj.cid == 3].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[57]
-    hbj_adjust11 =  (hbj[hbj.cid == 1].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[11]
-    hbj_adjust35 =  (hbj[hbj.cid == 2].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[35]
-    hbj_adjust49 =  (hbj[hbj.cid == 4].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[49]
+    hbj_adjust57 =  (hbj[hbj.cid == 57].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[57]
+    hbj_adjust11 =  (hbj[hbj.cid == 11].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[11]
+    hbj_adjust35 =  (hbj[hbj.cid == 35].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[35]
+    hbj_adjust49 =  (hbj[hbj.cid == 49].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[49]
     tdm_output.HBJ[tdm_output.CO_FIPS == 57] = tdm_output.HBJ[tdm_output.CO_FIPS == 57]*hbj_adjust57
     tdm_output.HBJ[tdm_output.CO_FIPS == 11] = tdm_output.HBJ[tdm_output.CO_FIPS == 11]*hbj_adjust11
     tdm_output.HBJ[tdm_output.CO_FIPS == 35] = tdm_output.HBJ[tdm_output.CO_FIPS == 35]*hbj_adjust35
@@ -1239,10 +1239,10 @@ def travel_model_export_no_constuction(year, settings, jobs, households, buildin
     zagj = tdm_output[(tdm_output.agr_sqft > 0)]
     c_agj_adjust = zagj.groupby("CO_FIPS").agr_sqft.sum()
     #first adjustment
-    agj_adjust57 =  (agj[agj.cid == 3].number_of_jobs.iloc[0])*1.0/c_agj_adjust[57]
-    agj_adjust11 =  (agj[agj.cid == 1].number_of_jobs.iloc[0])*1.0/c_agj_adjust[11]
-    agj_adjust35 =  (agj[agj.cid == 2].number_of_jobs.iloc[0])*1.0/c_agj_adjust[35]
-    agj_adjust49 =  (agj[agj.cid == 4].number_of_jobs.iloc[0])*1.0/c_agj_adjust[49]
+    agj_adjust57 =  (agj[agj.cid == 57].number_of_jobs.iloc[0])*1.0/c_agj_adjust[57]
+    agj_adjust11 =  (agj[agj.cid == 11].number_of_jobs.iloc[0])*1.0/c_agj_adjust[11]
+    agj_adjust35 =  (agj[agj.cid == 35].number_of_jobs.iloc[0])*1.0/c_agj_adjust[35]
+    agj_adjust49 =  (agj[agj.cid == 49].number_of_jobs.iloc[0])*1.0/c_agj_adjust[49]
     tdm_output['FM_AGRI'] = 0
     tdm_output.FM_AGRI[tdm_output.CO_FIPS == 57] = tdm_output.agr_sqft[tdm_output.CO_FIPS == 57]*agj_adjust57
     tdm_output.FM_AGRI[tdm_output.CO_FIPS == 11] = tdm_output.agr_sqft[tdm_output.CO_FIPS == 11]*agj_adjust11
@@ -1251,10 +1251,10 @@ def travel_model_export_no_constuction(year, settings, jobs, households, buildin
     tdm_output.FM_AGRI = np.round(tdm_output.FM_AGRI)
     #secondadjustment
     c_agj_adjust = tdm_output.groupby("CO_FIPS").FM_AGRI.sum()
-    agj_adjust57 =  (agj[agj.cid == 3].number_of_jobs.iloc[0])*1.0/c_agj_adjust[57]
-    agj_adjust11 =  (agj[agj.cid == 1].number_of_jobs.iloc[0])*1.0/c_agj_adjust[11]
-    agj_adjust35 =  (agj[agj.cid == 2].number_of_jobs.iloc[0])*1.0/c_agj_adjust[35]
-    agj_adjust49 =  (agj[agj.cid == 4].number_of_jobs.iloc[0])*1.0/c_agj_adjust[49]  
+    agj_adjust57 =  (agj[agj.cid == 57].number_of_jobs.iloc[0])*1.0/c_agj_adjust[57]
+    agj_adjust11 =  (agj[agj.cid == 11].number_of_jobs.iloc[0])*1.0/c_agj_adjust[11]
+    agj_adjust35 =  (agj[agj.cid == 35].number_of_jobs.iloc[0])*1.0/c_agj_adjust[35]
+    agj_adjust49 =  (agj[agj.cid == 49].number_of_jobs.iloc[0])*1.0/c_agj_adjust[49]  
     tdm_output.FM_AGRI[tdm_output.CO_FIPS == 57] = tdm_output.FM_AGRI[tdm_output.CO_FIPS == 57]*agj_adjust57
     tdm_output.FM_AGRI[tdm_output.CO_FIPS == 11] = tdm_output.FM_AGRI[tdm_output.CO_FIPS == 11]*agj_adjust11
     tdm_output.FM_AGRI[tdm_output.CO_FIPS == 35] = tdm_output.FM_AGRI[tdm_output.CO_FIPS == 35]*agj_adjust35
@@ -1264,10 +1264,10 @@ def travel_model_export_no_constuction(year, settings, jobs, households, buildin
     #Mining Job
     mij = employment_control[(employment_control.year == year)&(employment_control.sector_id == 8)]
     c_mij_adjust = tdm_output.groupby("CO_FIPS").FM_MING.sum()
-    mij_adjust57 =  (mij[mij.cid == 3].number_of_jobs.iloc[0])*1.0/c_mij_adjust[57]
-    mij_adjust11 =  (mij[mij.cid == 1].number_of_jobs.iloc[0])*1.0/c_mij_adjust[11]
-    mij_adjust35 =  (mij[mij.cid == 2].number_of_jobs.iloc[0])*1.0/c_mij_adjust[35]
-    mij_adjust49 =  (mij[mij.cid == 4].number_of_jobs.iloc[0])*1.0/c_mij_adjust[49]
+    mij_adjust57 =  (mij[mij.cid == 57].number_of_jobs.iloc[0])*1.0/c_mij_adjust[57]
+    mij_adjust11 =  (mij[mij.cid == 11].number_of_jobs.iloc[0])*1.0/c_mij_adjust[11]
+    mij_adjust35 =  (mij[mij.cid == 35].number_of_jobs.iloc[0])*1.0/c_mij_adjust[35]
+    mij_adjust49 =  (mij[mij.cid == 49].number_of_jobs.iloc[0])*1.0/c_mij_adjust[49]
     tdm_output.FM_MING[tdm_output.CO_FIPS == 57] = tdm_output.FM_MING[tdm_output.CO_FIPS == 57]*mij_adjust57
     tdm_output.FM_MING[tdm_output.CO_FIPS == 11] = tdm_output.FM_MING[tdm_output.CO_FIPS == 11]*mij_adjust11
     tdm_output.FM_MING[tdm_output.CO_FIPS == 35] = tdm_output.FM_MING[tdm_output.CO_FIPS == 35]*mij_adjust35
@@ -1316,22 +1316,22 @@ def travel_model_export_add_constuction(year, settings, jobs, households, buildi
     #firstadjustment
 
     if 57 in c_coj_adjust.index.tolist():
-        coj_adjust57 = (coj[coj.cid == 3].number_of_jobs.iloc[0])*1.0/c_coj_adjust[57]
+        coj_adjust57 = (coj[coj.cid == 57].number_of_jobs.iloc[0])*1.0/c_coj_adjust[57]
     else:
         coj_adjust57 = 0
 
     if 11 in c_coj_adjust.index.tolist():
-        coj_adjust11 =  (coj[coj.cid == 1].number_of_jobs.iloc[0])*1.0/c_coj_adjust[11]
+        coj_adjust11 =  (coj[coj.cid == 11].number_of_jobs.iloc[0])*1.0/c_coj_adjust[11]
     else:
         coj_adjust11 = 0
 
     if 35 in c_coj_adjust.index.tolist():
-        coj_adjust35 =  (coj[coj.cid == 2].number_of_jobs.iloc[0])*1.0/c_coj_adjust[35]
+        coj_adjust35 =  (coj[coj.cid == 35].number_of_jobs.iloc[0])*1.0/c_coj_adjust[35]
     else:
         coj_adjust35 = 0
 
     if 49 in c_coj_adjust.index.tolist():
-        coj_adjust49 =  (coj[coj.cid == 4].number_of_jobs.iloc[0])*1.0/c_coj_adjust[49]
+        coj_adjust49 =  (coj[coj.cid == 49].number_of_jobs.iloc[0])*1.0/c_coj_adjust[49]
     else:
         coj_adjust49 = 0
 
@@ -1343,10 +1343,10 @@ def travel_model_export_add_constuction(year, settings, jobs, households, buildi
     tdm_output.FM_CONS = np.round(tdm_output.FM_CONS)
     #secondadjustment
     c_coj_adjust = tdm_output.groupby("CO_FIPS").FM_CONS.sum()
-    coj_adjust57 =  (coj[coj.cid == 3].number_of_jobs.iloc[0])*1.0/c_coj_adjust[57]
-    coj_adjust11 =  (coj[coj.cid == 1].number_of_jobs.iloc[0])*1.0/c_coj_adjust[11]
-    coj_adjust35 =  (coj[coj.cid == 2].number_of_jobs.iloc[0])*1.0/c_coj_adjust[35]
-    coj_adjust49 =  (coj[coj.cid == 4].number_of_jobs.iloc[0])*1.0/c_coj_adjust[49]
+    coj_adjust57 =  (coj[coj.cid == 57].number_of_jobs.iloc[0])*1.0/c_coj_adjust[57]
+    coj_adjust11 =  (coj[coj.cid == 11].number_of_jobs.iloc[0])*1.0/c_coj_adjust[11]
+    coj_adjust35 =  (coj[coj.cid == 35].number_of_jobs.iloc[0])*1.0/c_coj_adjust[35]
+    coj_adjust49 =  (coj[coj.cid == 49].number_of_jobs.iloc[0])*1.0/c_coj_adjust[49]
     tdm_output.FM_CONS[tdm_output.CO_FIPS == 57] = tdm_output.FM_CONS[tdm_output.CO_FIPS == 57]*coj_adjust57
     tdm_output.FM_CONS[tdm_output.CO_FIPS == 11] = tdm_output.FM_CONS[tdm_output.CO_FIPS == 11]*coj_adjust11
     tdm_output.FM_CONS[tdm_output.CO_FIPS == 35] = tdm_output.FM_CONS[tdm_output.CO_FIPS == 35]*coj_adjust35
@@ -1454,7 +1454,7 @@ def run_arcpy(year, settings,store):
     #if year > 0:
         REMMdir = os.getcwd()
         b = sim.get_table('parcels').to_frame(['x','y','total_residential_units','total_job_spaces','county_id','gridID'])
-        bdev = b[((b.total_residential_units >= 1) | (b.total_job_spaces >= 1))&(b.county_id == 4)]
+        bdev = b[((b.total_residential_units >= 1) | (b.total_job_spaces >= 1))&(b.county_id == 49)]
         bdev.to_csv('utahdevelopedparcels.csv')
         f = open('YEAR.txt', 'w')
         f.write(str(year))

@@ -5,7 +5,7 @@ model_type: segmented_regression
 segmentation_col: general_type
 
 fit_filters:
-- county_id == 3
+- county_id == 57
 - non_residential_sqft > 0
 - non_residential_sqft < 100000
 - building_type_id in [7,8]

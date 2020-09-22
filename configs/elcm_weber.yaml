@@ -6,12 +6,12 @@ segmentation_col: sector_id
 
 choosers_fit_filters: null
 
-choosers_predict_filters: cid == 3
+choosers_predict_filters: cid == 57
 
 alts_fit_filters:
 - job_spaces > 0
 
-alts_predict_filters: county_id == 3
+alts_predict_filters: county_id == 57
 
 interaction_predict_filters: null
 

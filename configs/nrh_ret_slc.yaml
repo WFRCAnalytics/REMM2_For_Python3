@@ -18,7 +18,7 @@ fit_filters:
 - building_age < 200
 
 predict_filters:
-- county_id==2
+- county_id==35
 - building_type_id==4
 - zone_id > 0
 

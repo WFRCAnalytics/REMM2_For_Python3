@@ -16,7 +16,7 @@ fit_filters:
 - 100000 < improvement_value < 10000000
 
 predict_filters:
-- county_id==2
+- county_id==35
 - sqft_per_unit > 0
 - sqft_per_unit <= 5000
 - building_type_id == 2
