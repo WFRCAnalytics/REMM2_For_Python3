@@ -45,23 +45,23 @@ def max_far(parcels, scenario, scenario_inputs):
     far = utils.conditional_upzone(scenario, scenario_inputs, "max_far", "far_up").reindex(parcels.index)
     #downtownTAZ = pd.read_csv(r"DOWNTOWNTAZ\DOWNTOWNTAZ.csv")
     #far[(-parcels.zone_id.isin(list(downtownTAZ.TAZID))) & (far > 0.5)] = 0.5
-    #far[parcels.county_id == 4] = far[parcels.county_id == 4] * 0.8
+    #far[parcels.county_id == 49] = far[parcels.county_id == 49] * 0.8
     return far
     #far[parcels.parcel_size > 3000000]  = far[parcels.parcel_size > 3000000]* 0.5
 
 @sim.column('parcels', 'max_dua', cache=True)
 def max_dua(parcels, year, scenario, scenario_inputs):
     dua = utils.conditional_upzone(scenario, scenario_inputs, "max_dua", "dua_up").reindex(parcels.index)
-    dua[(parcels.total_residential_units < 1) & (parcels.total_job_spaces < 1) & (parcels.county_id != 1) & (parcels.county_id != 2)] = dua[(parcels.total_residential_units < 1) & (parcels.total_job_spaces < 1) & (parcels.county_id != 1) & (parcels.county_id != 2)]*0.8
+    dua[(parcels.total_residential_units < 1) & (parcels.total_job_spaces < 1) & (parcels.county_id != 11) & (parcels.county_id != 35)] = dua[(parcels.total_residential_units < 1) & (parcels.total_job_spaces < 1) & (parcels.county_id != 11) & (parcels.county_id != 35)]*0.8
     
     #Salt Lake County 10% increase for base year
-    dua[parcels.county_id == 2] = dua[parcels.county_id == 2]*1.1
+    dua[parcels.county_id == 35] = dua[parcels.county_id == 35]*1.1
     
     #Davis County 2030 20% increase of capacity. 2040 40% increase of capacity
     if year >= 2025 and year < 2035:
-        dua[parcels.county_id == 1] = dua[parcels.county_id == 1]*1.2
+        dua[parcels.county_id == 11] = dua[parcels.county_id == 11]*1.2
     elif year >=2035:
-        dua[parcels.county_id == 1] = dua[parcels.county_id == 1]*1.45
+        dua[parcels.county_id == 11] = dua[parcels.county_id == 11]*1.45
     
     return dua
         
@@ -98,9 +98,9 @@ def redev_friction(parcels,year):
     # s = pd.read_csv("data/redev_friction.csv", index_col="parcel_id")
     s = pd.read_csv("data/redev_friction.csv", index_col="parcel_id")
     sredev = s.redev_friction.reindex(parcels.index).fillna(5)
-    sredev[parcels.county_id == 4] = 10
+    sredev[parcels.county_id == 49] = 10
     if year >=2035:
-        sredev[parcels.county_id == 1] = sredev[parcels.county_id == 1]/2
+        sredev[parcels.county_id == 11] = sredev[parcels.county_id == 11]/2
     return sredev
 
 @sim.column('parcels', 'parcel_volume')

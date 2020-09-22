@@ -6,12 +6,12 @@ segmentation_col: sector_id
 
 choosers_fit_filters: b_year_built > 2000
 
-choosers_predict_filters: cid == 4
+choosers_predict_filters: cid == 49
 
 alts_fit_filters:
 - job_spaces > 0
 
-alts_predict_filters: county_id == 4
+alts_predict_filters: county_id == 49
 
 interaction_predict_filters: null
 

@@ -9,11 +9,11 @@ choosers_fit_filters:
 - parcel_id > 0
 - income > 0
 - county_id > 0
-- county_id != 2
-- county_id != 4
+- county_id != 35
+- county_id != 49
 
 choosers_predict_filters:
-- cid == 3
+- cid == 57
 
 alts_fit_filters:
 - parcel_id > 0
@@ -24,7 +24,7 @@ alts_fit_filters:
 - res_price_per_sqft > 0
 
 alts_predict_filters:
-- county_id == 3
+- county_id == 57
 - res_price_per_sqft > -1
 
 interaction_predict_filters: null

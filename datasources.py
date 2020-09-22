@@ -9,9 +9,9 @@ import numpy as np
 import os
 import utils as wfrc_utils
 
-@sim.table('valid_parcels', cache=True)
-def valid_parcels(store):
-    return store['valid_parcels']
+#@sim.table('valid_parcels', cache=True)
+#def valid_parcels(store):
+    #return store['valid_parcels']
 
 @sim.table('parcels', cache=True)
 def parcels(store):
@@ -28,45 +28,45 @@ def parcels(store):
 def parcels_slc(parcels):
     p_col = parcels.local_columns + ['ave_sqft_per_unit', 'total_residential_units','total_job_spaces']
     df = parcels.to_frame(p_col)
-    return df[df.county_id==2]
+    return df[df.county_id==35]
     
 @sim.table('parcels_utah', cache=True)
 def parcels_utah(parcels):
     p_col = parcels.local_columns + ['ave_sqft_per_unit', 'total_residential_units','total_job_spaces']
     df = parcels.to_frame(p_col)
-    return df[df.county_id==4]
+    return df[df.county_id==49]
     
 @sim.table('parcels_davis', cache=True)
 def parcels_davis(parcels):
     p_col = parcels.local_columns + ['ave_sqft_per_unit', 'total_residential_units','total_job_spaces']
     df = parcels.to_frame(p_col)
-    return df[df.county_id==1]
+    return df[df.county_id==11]
 
 @sim.table('parcels_weber', cache=True)
 def parcels_weber(parcels):
     p_col = parcels.local_columns + ['ave_sqft_per_unit', 'total_residential_units','total_job_spaces']
     df = parcels.to_frame(p_col)
-    return df[df.county_id==3]
+    return df[df.county_id==57]
     
 @sim.table('households_slc', cache=True)
 def households_slc(households):
     df = households.local
-    return df[df.cid==2]
+    return df[df.cid==35]
 
 @sim.table('households_utah', cache=True)
 def households_utah(households):
     df = households.local
-    return df[df.cid==4]
+    return df[df.cid==49]
     
 @sim.table('households_davis', cache=True)
 def households_davis(households):
     df = households.local
-    return df[df.cid==1]
+    return df[df.cid==11]
     
 @sim.table('households_weber', cache=True)
 def households_weber(households):
     df = households.local
-    return df[df.cid==3]
+    return df[df.cid==57]
 
 @sim.table('households_for_estimation', cache=True)
 def households_for_estimation(store, buildings):
@@ -76,194 +76,194 @@ def households_for_estimation(store, buildings):
 @sim.table('jobs_slc', cache=True)
 def jobs_slc(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[df.cid==2]
+    return df[df.cid==35]
 
 @sim.table('jobs_slc_ind')
 def jobs_slc_ind(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==2) & (df.building_type_id==3)]
+    return df[(df.cid==35) & (df.building_type_id==3)]
     
 @sim.table('jobs_slc_ret')
 def jobs_slc_ret(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==2) & (df.building_type_id==4)]
+    return df[(df.cid==35) & (df.building_type_id==4)]
     
 @sim.table('jobs_slc_ofc')
 def jobs_slc_ofc(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==2) & (df.building_type_id==5)]
+    return df[(df.cid==35) & (df.building_type_id==5)]
 
 @sim.table('jobs_davis_ind')
 def jobs_davis_ind(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==1) & (df.building_type_id==3)]
+    return df[(df.cid==11) & (df.building_type_id==3)]
     
 @sim.table('jobs_davis_ret')
 def jobs_davis_ret(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==1) & (df.building_type_id==4)]
+    return df[(df.cid==11) & (df.building_type_id==4)]
     
 @sim.table('jobs_davis_ofc')
 def jobs_davis_ofc(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==1) & (df.building_type_id==5)]
+    return df[(df.cid==11) & (df.building_type_id==5)]
 
 @sim.table('jobs_weber_ind')
 def jobs_weber_ind(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==3) & (df.building_type_id==3)]
+    return df[(df.cid==57) & (df.building_type_id==3)]
     
 @sim.table('jobs_weber_ret')
 def jobs_weber_ret(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==3) & (df.building_type_id==4)]
+    return df[(df.cid==57) & (df.building_type_id==4)]
     
 @sim.table('jobs_weber_ofc')
 def jobs_weber_ofc(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==3) & (df.building_type_id==5)]
+    return df[(df.cid==57) & (df.building_type_id==5)]
 
 @sim.table('jobs_utah_ind')
 def jobs_utah_ind(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==4) & (df.building_type_id==3)]
+    return df[(df.cid==49) & (df.building_type_id==3)]
     
 @sim.table('jobs_utah_ret')
 def jobs_utah_ret(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==4) & (df.building_type_id==4)]
+    return df[(df.cid==49) & (df.building_type_id==4)]
     
 @sim.table('jobs_utah_ofc')
 def jobs_utah_ofc(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[(df.cid==4) & (df.building_type_id==5)]
+    return df[(df.cid==49) & (df.building_type_id==5)]
 
 
 @sim.table('jobs_utah', cache=True)
 def jobs_utah(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[df.cid==4]
+    return df[df.cid==49]
 
 @sim.table('jobs_davis', cache=True)
 def jobs_davis(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[df.cid==1]
+    return df[df.cid==11]
 
 @sim.table('jobs_weber', cache=True)
 def jobs_weber(jobs):
     df = jobs.to_frame(['cid','building_type_id'])
-    return df[df.cid==3]
+    return df[df.cid==57]
     
 @sim.table('buildings_slc', cache=True)
 def buildings_slc(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[df.county_id==2]
+    df = df[df.county_id==35]
     return df.drop('county_id', axis=1)
 
 @sim.table('buildings_slc_ind', cache=True)
 def buildings_slc_ind(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==2) & (df.building_type_id == 3)]
+    df = df[(df.county_id==35) & (df.building_type_id == 3)]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_slc_ret', cache=True)
 def buildings_slc_ret(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==2) & (df.building_type_id == 4)]
+    df = df[(df.county_id==35) & (df.building_type_id == 4)]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_slc_ofc', cache=True)
 def buildings_slc_ofc(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==2) & (df.building_type_id == 5)]
+    df = df[(df.county_id==35) & (df.building_type_id == 5)]
     return df.drop('county_id', axis=1)
 
 @sim.table('buildings_utah', cache=True)
 def buildings_utah(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[df.county_id==4]
+    df = df[df.county_id==49]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_utah_ind', cache=True)
 def buildings_utah_ind(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==4) & (df.building_type_id == 3)]
+    df = df[(df.county_id==49) & (df.building_type_id == 3)]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_utah_ret', cache=True)
 def buildings_utah_ret(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==4) & (df.building_type_id == 4)]
+    df = df[(df.county_id==49) & (df.building_type_id == 4)]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_utah_ofc', cache=True)
 def buildings_utah_ofc(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==4) & (df.building_type_id == 5)]
+    df = df[(df.county_id==49) & (df.building_type_id == 5)]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_davis', cache=True)
 def buildings_davis(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[df.county_id==1]
+    df = df[df.county_id==11]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_davis_ind', cache=True)
 def buildings_davis_ind(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==1) & (df.building_type_id == 3)]
+    df = df[(df.county_id==11) & (df.building_type_id == 3)]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_davis_ret', cache=True)
 def buildings_davis_ret(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==1) & (df.building_type_id == 4)]
+    df = df[(df.county_id==11) & (df.building_type_id == 4)]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_davis_ofc', cache=True)
 def buildings_davis_ofc(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==1) & (df.building_type_id == 5)]
+    df = df[(df.county_id==11) & (df.building_type_id == 5)]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_weber', cache=True)
 def buildings_weber(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[df.county_id==3]
+    df = df[df.county_id==57]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_weber_ind', cache=True)
 def buildings_weber_ind(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==3) & (df.building_type_id == 3)]
+    df = df[(df.county_id==57) & (df.building_type_id == 3)]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_weber_ret', cache=True)
 def buildings_weber_ret(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==3) & (df.building_type_id == 4)]
+    df = df[(df.county_id==57) & (df.building_type_id == 4)]
     return df.drop('county_id', axis=1)
     
 @sim.table('buildings_weber_ofc', cache=True)
 def buildings_weber_ofc(buildings):
     b_col = buildings.local_columns + ['job_spaces','county_id']
     df = buildings.to_frame(b_col)
-    df = df[(df.county_id==3) & (df.building_type_id == 5)]
+    df = df[(df.county_id==57) & (df.building_type_id == 5)]
     return df.drop('county_id', axis=1)
 
 @sim.table('buildings_for_estimation', cache=True)

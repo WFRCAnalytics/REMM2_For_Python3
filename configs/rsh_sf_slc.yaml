@@ -5,7 +5,7 @@ model_type: segmented_regression
 segmentation_col: general_type
 
 fit_filters:
-- county_id==2
+- county_id==35
 - building_type_id == 1
 - res_price_per_sqft > 10.0
 - res_price_per_sqft < 200.0
@@ -17,7 +17,7 @@ fit_filters:
 - 75000 < improvement_value < 1000000
 
 predict_filters:
-- county_id==2
+- county_id==35
 - sqft_per_unit > 0
 - sqft_per_unit <= 12000
 - building_type_id == 1
