@@ -9,9 +9,9 @@ import numpy as np
 import os
 import utils as wfrc_utils
 
-#@sim.table('valid_parcels', cache=True)
-#def valid_parcels(store):
-    #return store['valid_parcels']
+@sim.table('valid_parcels', cache=True)
+def valid_parcels(store):
+    return store['valid_parcels']
 
 @sim.table('parcels', cache=True)
 def parcels(store):

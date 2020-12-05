@@ -45,7 +45,7 @@ def max_far(parcels, scenario, scenario_inputs):
     far = utils.conditional_upzone(scenario, scenario_inputs, "max_far", "far_up").reindex(parcels.index)
     #downtownTAZ = pd.read_csv(r"DOWNTOWNTAZ\DOWNTOWNTAZ.csv")
     #far[(-parcels.zone_id.isin(list(downtownTAZ.TAZID))) & (far > 0.5)] = 0.5
-    #far[parcels.county_id == 49] = far[parcels.county_id == 49] * 0.8
+    #far[parcels.county_id == 4] = far[parcels.county_id == 4] * 0.8
     return far
     #far[parcels.parcel_size > 3000000]  = far[parcels.parcel_size > 3000000]* 0.5
 

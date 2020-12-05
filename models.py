@@ -1105,7 +1105,7 @@ def indicator_export(households, buildings, jobs, parcels, zones, distlrg, distm
         
             summary_geog['jobs'] = jobs.groupby(id_col).building_id.count()
             summary_geog['jobs1'] = jobs[jobs.sector_id==1].groupby(id_col).building_id.count()
-            #summary_geog['jobs1_prop'][summary_geog.county_id==11] = np.divide(summary_geog.jobs1, jobs[(jobs.sector_id==1)&(jobs.county_id==11)].sector_id.count())
+            #summary_geog['jobs1_prop'][summary_geog.county_id==1] = np.divide(summary_geog.jobs1, jobs[(jobs.sector_id==1)&(jobs.county_id==1)].sector_id.count())
             summary_geog['jobs2'] = jobs[jobs.sector_id==2].groupby(id_col).building_id.count()
             summary_geog['jobs3'] = jobs[jobs.sector_id==3].groupby(id_col).building_id.count()
             summary_geog['jobs4'] = jobs[jobs.sector_id==4].groupby(id_col).building_id.count()
@@ -1131,6 +1131,7 @@ def indicator_export(households, buildings, jobs, parcels, zones, distlrg, distm
                 #ADJUSTPOPULATION
                 eq = pd.read_csv("data/TAZCTYEQ.csv", index_col="Z")
                 summary_geog['COUNTY'] = eq.COUNTY.reindex(summary_geog.index).fillna(0)
+                summary_geog.to_csv("data/summary_geog.csv") # REMOVE THIS
                 pop_control = pd.read_csv("./data/population_controls.csv")
                 pop_control = pop_control[pop_control.year == year]
                 summary_geog['pop_adjust'] = 0
@@ -1139,15 +1140,15 @@ def indicator_export(households, buildings, jobs, parcels, zones, distlrg, distm
                 znoadjust = summary_geog[summary_geog.pop_adjust == 0]
                 cadjust = zadjust.groupby("COUNTY").population.sum()
                 cnoadjust = znoadjust.groupby("COUNTY").population.sum()
-                adjust1 = (pop_control[pop_control.cid == 57].number_of_population.iloc[0] - cnoadjust[57])/cadjust[57]
-                adjust2 = (pop_control[pop_control.cid == 11].number_of_population.iloc[0] - cnoadjust[11])/cadjust[11]
-                adjust3 = (pop_control[pop_control.cid == 35].number_of_population.iloc[0] - cnoadjust[35])/cadjust[35]
-                adjust4 = (pop_control[pop_control.cid == 49].number_of_population.iloc[0] - cnoadjust[49])/cadjust[49]
+                adjust11 = (pop_control[pop_control.cid == 11].number_of_population.iloc[0] - cnoadjust[11])/cadjust[11]
+                adjust35 = (pop_control[pop_control.cid == 35].number_of_population.iloc[0] - cnoadjust[35])/cadjust[35]
+                adjust49 = (pop_control[pop_control.cid == 49].number_of_population.iloc[0] - cnoadjust[49])/cadjust[49]
+                adjust57 = (pop_control[pop_control.cid == 57].number_of_population.iloc[0] - cnoadjust[57])/cadjust[57]
                 zafteradjust = summary_geog.copy()
-                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 11)] =     zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 11)]*adjust1
-                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 35)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 35)]*adjust2
-                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 57)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 57)]*adjust3
-                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 49)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 49)]*adjust4
+                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 11)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 11)]*adjust11
+                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 35)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 35)]*adjust35
+                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 57)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 57)]*adjust57
+                zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 49)] = zafteradjust.population[(zafteradjust.pop_adjust == 1) & (zafteradjust.COUNTY == 49)]*adjust49
                 summary_geog = zafteradjust
                 #ENDADJUSTPOPULATION  
 
@@ -1208,6 +1209,8 @@ def travel_model_export_no_constuction(year, settings, jobs, households, buildin
     hbj = employment_control[(employment_control.year == year)&(employment_control.sector_id == 12)]
     zhbj = tdm_output[(tdm_output.TOTHH > 0)]
     c_hbj_adjust = zhbj.groupby("CO_FIPS").TOTHH.sum()
+    hbj.to_csv("data/hbj.csv") # REMOVE THIS
+    c_hbj_adjust.to_csv("data/c_hbj_adjust.csv") # REMOVE THIS
     #first adjustment
     hbj_adjust57 =  (hbj[hbj.cid == 57].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[57]
     hbj_adjust11 =  (hbj[hbj.cid == 11].number_of_jobs.iloc[0])*1.0/c_hbj_adjust[11]
