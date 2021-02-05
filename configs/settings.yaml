@@ -3,7 +3,9 @@ aggregation_tables:
   - zones
 
 remm:
-    indicator_years: [2015,2020,2030,2040,2050]
+    base_year: 2015
+    end_year: 2061
+    indicator_years: [2015,2016,2017,2018,2019,2020,2030,2040,2050]
     
 tdm:
   run_years:

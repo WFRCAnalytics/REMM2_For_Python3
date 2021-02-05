@@ -5,6 +5,8 @@ import pandas as pd
 import numpy as np
 import os
 
+remm_years = sim.get_injectable('settings')['remm']
+
 #sim.run(["travel_time_reset"])
 sim.run([
         "clear_cache",
@@ -46,8 +48,9 @@ sim.run([
         "elcm_simulate_weber",  # employment location choice Weber County
         #"clear_cache",
         "indicator_export",
+        'dev_indicator_export',
         "travel_model_export_no_construction",  # export travel model inputs at TAZ level in specified years
         "garbage_collect",
         "travel_model_export_add_construction",  # export travel model inputs at TAZ level in specified years
         #"run_cube",               # call Cube and import travel times in specified years
-    ], iter_vars=range(2015,2061)) #this can be determined using indicator_years_from setting.yaml
+    ], iter_vars=range(2015, 2061)) # change this in settings.yaml
