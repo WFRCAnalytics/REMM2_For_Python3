@@ -1196,6 +1196,7 @@ def dev_indicator_export(year, settings, summary, households, buildings, parcels
     parcels['has_buildings'] = 0
     parcels['was_developed'] = 0
     parcels['was_redeveloped'] = 0
+
     
     # if base year, output data before simulation
     if  year == base_year:
@@ -1221,7 +1222,7 @@ def dev_indicator_export(year, settings, summary, households, buildings, parcels
         
         buildings_by_parcel_sum = base_buildings.groupby('parcel_id')[['residential_units', 'job_spaces', 'building_sqft', 'non_residential_sqft','residential_sqft']].sum()
         
-        buildings_by_parcel_avg = base_buildings.groupby('parcel_id')[['unit_price_non_residential', 'res_price_per_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse']].mean()
+        buildings_by_parcel_avg = base_buildings.groupby('parcel_id')[['unit_price_non_residential', 'res_price_per_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse', 'is_other']].mean()
         
         buildings_by_parcel = buildings_by_parcel_sum.merge(buildings_by_parcel_avg, left_on='parcel_id', right_on='parcel_id',how='left')
         
@@ -1257,6 +1258,7 @@ def dev_indicator_export(year, settings, summary, households, buildings, parcels
         
         # load previous year's data (we need has_buildings from previous table)
         parcels_output_previous = pd.read_csv(os.path.join(directory, "run_{}_{}_parcel_dev.csv".format(summary.run_num, year-1)))       
+         
     
     # transfer the state of has_buildings field from last year's table
     parcels['has_buildings'] = parcels_output_previous['has_buildings']
@@ -1284,7 +1286,7 @@ def dev_indicator_export(year, settings, summary, households, buildings, parcels
     
     buildings_by_parcel_sum = buildings.groupby('parcel_id')[['residential_units', 'job_spaces', 'building_sqft', 'non_residential_sqft','residential_sqft']].sum()
         
-    buildings_by_parcel_avg = buildings.groupby('parcel_id')[['unit_price_non_residential', 'res_price_per_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse']].mean()
+    buildings_by_parcel_avg = buildings.groupby('parcel_id')[['unit_price_non_residential', 'res_price_per_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse', 'is_other']].mean()
     
     buildings_by_parcel = buildings_by_parcel_sum.merge(buildings_by_parcel_avg, left_on='parcel_id', right_on='parcel_id',how='left')
     
