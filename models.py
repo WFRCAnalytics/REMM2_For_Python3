@@ -1190,7 +1190,7 @@ def dev_indicator_export(year, settings, summary, households, buildings, parcels
                     'land_value' , 'max_far', 'max_dua']].copy()
     
     # store the import buildings fields in a list
-    building_fields = ['parcel_id','residential_units', 'job_spaces', 'unit_price_non_residential', 'res_price_per_sqft', 'building_sqft', 'non_residential_sqft','residential_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse']
+    building_fields = ['parcel_id','residential_units', 'job_spaces', 'unit_price_non_residential', 'res_price_per_sqft', 'building_sqft', 'non_residential_sqft','residential_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse', 'is_other']
     
     # add some new fields
     parcels['has_buildings'] = 0
