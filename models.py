@@ -1169,68 +1169,72 @@ def indicator_export(households, buildings, jobs, parcels, zones, distlrg, distm
         #buildings.to_csv(r"data/buildings11202015.csv")
         #geog_export(zone_id_2011, households, jobs, buildings, uphh, upj, year, summary.run_num)        
 
-@sim.step('dev_indicator_export')
-def dev_indicator_export(year, settings, summary, households, buildings, parcels, zoning_baseline):
+
+@sim.step('development_progress_export')
+def development_progress_export(year, settings, store, summary, jobs, buildings, parcels, zoning_baseline):
     
     # get the base year
     base_year = settings['remm']['base_year']
     
     # create folder within REMMRun to house outputs
-    directory = 'REMMRun/dev_indicators'
+    directory = 'REMMRun/development_progress'
     if not os.path.exists(directory):
         os.makedirs(directory)    
-    
-    # load the data tables
-    buildings = buildings.to_frame()
-    parcels = parcels.to_frame().reset_index()
-    zoning = zoning_baseline.to_frame().reset_index()
-    
-    # subset columns in parcels table
-    parcels = parcels[['parcel_id', 'parcel_id_REMM', 'county_id', 'zone_id','parcel_acres',
-                    'land_value' , 'max_far', 'max_dua']].copy()
-    
-    # store the import buildings fields in a list
-    building_fields = ['parcel_id','residential_units', 'job_spaces', 'unit_price_non_residential', 'res_price_per_sqft', 'building_sqft', 'non_residential_sqft','residential_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse', 'is_other']
-    
-    # add some new fields
-    parcels['has_buildings'] = 0
-    parcels['was_developed'] = 0
-    parcels['was_redeveloped'] = 0
-
     
     # if base year, output data before simulation
     if  year == base_year:
         
-        # get base buildings and their parcel ids
-        base_buildings = buildings[buildings.note == "base"]
-        ids = list(set(base_buildings["parcel_id"].to_list()))
-        parcels_base = parcels.copy()
-        parcels_base.loc[parcels_base['parcel_id'].isin(ids), 'has_buildings'] = 1
+        # get base parcels
+        base_parcels = store['parcels'].reset_index()
+        base_parcels = base_parcels.query('x>0')
+        base_parcels = base_parcels.query('zone_id>0')
+        base_parcels = base_parcels.query('zone_id<2882')        
+        
+        # get base zoning
+        base_zoning = store['zoning_baseline'].reset_index()
+        base_parcels = base_parcels.merge(base_zoning, left_on='parcel_id', right_on='parcel_id', how='left')
+        base_parcels = base_parcels[['parcel_id', 'parcel_id_REMM', 'county_id', 'zone_id','parcel_acres',
+                        'land_value' , 'max_far', 'max_dua', 'type1', 'type2', 'type3', 'type4', 'type5', 'type6', 'type7', 'type8']].copy()
+        
+        base_parcels['has_buildings'] = 0
+        base_parcels['was_developed'] = 0
+        base_parcels['was_redeveloped'] = 0         
         
         # indicate if parcel is developable
-        zoning_base = zoning.copy()
-        zoning_base.loc[(zoning_base['type1'] == 'f') & (zoning_base['type2'] == 'f') & 
-                   (zoning_base['type3'] == 'f') & (zoning_base['type4'] == 'f') &
-                   (zoning_base['type5'] == 'f') & (zoning_base['type6'] == 'f'), 'developable'] = 0
+        base_parcels.loc[(base_parcels['type1'] == 'f') & (base_parcels['type2'] == 'f') & 
+                   (base_parcels['type3'] == 'f') & (base_parcels['type4'] == 'f') &
+                   (base_parcels['type5'] == 'f') & (base_parcels['type6'] == 'f'), 'developable'] = 0
         
-        zoning_base['developable'].fillna(1, inplace=True)
-        zoning_base = zoning_base[['parcel_id', 'developable']]
-        parcels_base = parcels_base.merge(zoning_base, left_on='parcel_id', right_on='parcel_id',how='left')
+        base_parcels['developable'].fillna(1, inplace=True)        
         
-        # summarize buildings by parcel id
-        base_buildings = base_buildings[building_fields].copy()
+        # get base buildings, identify if parcel has building
+        base_buildings = store['buildings']
+        ids = list(set(base_buildings["parcel_id"].to_list()))
+        base_parcels.loc[base_parcels['parcel_id'].isin(ids), 'has_buildings'] = 1
+                
+        # calculate residential sq footage
+        base_buildings.loc[(base_buildings['residential_units'] > 0) & (base_buildings['non_residential_sqft'] == 0), 'residential_sqft'] = base_buildings['building_sqft']
         
+        # building types
+        base_buildings.loc[base_buildings['building_type_id'] == 1,'is_sf'] = 1
+        base_buildings.loc[base_buildings['building_type_id'] == 2,'is_mf'] = 1
+        base_buildings.loc[base_buildings['building_type_id'] == 3,'is_industrial'] = 1
+        base_buildings.loc[base_buildings['building_type_id'] == 4,'is_retail'] = 1
+        base_buildings.loc[base_buildings['building_type_id'] == 5,'is_office'] = 1
+        base_buildings.loc[base_buildings['building_type_id'] == 6,'is_govt'] = 1
+        base_buildings.loc[base_buildings['building_type_id'] == 7,'is_mixeduse'] = 1
+        base_buildings.loc[base_buildings['building_type_id'] == 8,'is_other'] = 1
+        
+        # summarize building attributes to parcel level
         buildings_by_parcel_sum = base_buildings.groupby('parcel_id')[['residential_units', 'job_spaces', 'building_sqft', 'non_residential_sqft','residential_sqft']].sum()
-        
-        buildings_by_parcel_avg = base_buildings.groupby('parcel_id')[['unit_price_non_residential', 'res_price_per_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse', 'is_other']].mean()
-        
-        buildings_by_parcel = buildings_by_parcel_sum.merge(buildings_by_parcel_avg, left_on='parcel_id', right_on='parcel_id',how='left')
+        buildings_by_parcel_avg = base_buildings.groupby('parcel_id')[['unit_price_non_residential', 'res_price_per_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse', 'is_other', 'year_built']].mean()
+        buildings_by_parcel = buildings_by_parcel_sum.merge(buildings_by_parcel_avg, left_on='parcel_id', right_on='parcel_id',how='left')        
         
         # get building count per parcel
         building_count = pd.DataFrame(base_buildings['parcel_id'].value_counts()).reset_index()
         building_count.columns = ['parcel_id', 'building_count']
         building_summary = buildings_by_parcel.merge(building_count, left_on='parcel_id', right_on='parcel_id', how='left')     
-        parcels_output = parcels_base.merge(building_summary, left_on='parcel_id', right_on='parcel_id', how='left')
+        parcels_output = base_parcels.merge(building_summary, left_on='parcel_id', right_on='parcel_id', how='left')
     
         # fill NAs
         parcels_output['residential_units'].fillna(0, inplace=True)
@@ -1238,18 +1242,24 @@ def dev_indicator_export(year, settings, summary, households, buildings, parcels
         parcels_output['residential_sqft'].fillna(0, inplace=True)
         parcels_output['building_sqft'].fillna(0, inplace=True)
         parcels_output['building_count'].fillna(0, inplace=True)         
+        parcels_output['is_sf'].fillna(0, inplace=True)
+        parcels_output['is_mf'].fillna(0, inplace=True)
+        parcels_output['is_industrial'].fillna(0, inplace=True)
+        parcels_output['is_retail'].fillna(0, inplace=True)
+        parcels_output['is_office'].fillna(0, inplace=True)
+        parcels_output['is_govt'].fillna(0, inplace=True)
+        parcels_output['is_mixeduse'].fillna(0, inplace=True)
+        parcels_output['is_other'].fillna(0, inplace=True)         
         
         # calculate the total value of parcel
         parcels_output['non_res_value'] = parcels_output['unit_price_non_residential'] * parcels_output['non_residential_sqft']
         parcels_output['non_res_value'].fillna(0, inplace=True)
-        
         parcels_output['res_value'] = parcels_output['res_price_per_sqft'] * parcels_output['residential_sqft']
         parcels_output['res_value'].fillna(0, inplace=True)
-        
         parcels_output['total_value'] = parcels_output['land_value']  + (parcels_output['non_res_value'] + parcels_output['res_value'])
         
         # export the data table
-        parcels_output.to_csv(os.path.join(directory, "run_{}_base{}_parcel_dev.csv".format(summary.run_num, year)),index=False)
+        parcels_output.to_csv(os.path.join(directory, "run_{}_base_year_{}_parcel_devprog.csv".format(summary.run_num, year)),index=False)
         
         # set the base year as the previous years table
         parcels_output_previous = parcels_output
@@ -1257,8 +1267,23 @@ def dev_indicator_export(year, settings, summary, households, buildings, parcels
     else:
         
         # load previous year's data (we need has_buildings from previous table)
-        parcels_output_previous = pd.read_csv(os.path.join(directory, "run_{}_{}_parcel_dev.csv".format(summary.run_num, year-1)))       
+        parcels_output_previous = pd.read_csv(os.path.join(directory, "run_{}_year_{}_parcel_devprog.csv".format(summary.run_num, year-1)))       
          
+    
+    # load the data tables
+    buildings = buildings.to_frame()
+    parcels = parcels.to_frame().reset_index()    
+    zoning = zoning_baseline.to_frame().reset_index()
+    #jobs = jobs.to_frame()
+    
+    # subset columns in parcels table
+    parcels = parcels[['parcel_id', 'parcel_id_REMM', 'county_id', 'zone_id','parcel_acres',
+                    'land_value' , 'max_far', 'max_dua']].copy()
+    
+    # add some new fields
+    parcels['has_buildings'] = 0
+    parcels['was_developed'] = 0
+    parcels['was_redeveloped'] = 0    
     
     # transfer the state of has_buildings field from last year's table
     parcels['has_buildings'] = parcels_output_previous['has_buildings']
@@ -1282,11 +1307,12 @@ def dev_indicator_export(year, settings, summary, households, buildings, parcels
     parcels = parcels.merge(zoning, left_on='parcel_id', right_on='parcel_id',how='left')    
     
     # summarize buildings by parcel id
+    building_fields = ['parcel_id','residential_units', 'job_spaces', 'unit_price_non_residential', 'res_price_per_sqft', 'building_sqft', 'non_residential_sqft','residential_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse', 'is_other', 'year_built']
     buildings = buildings[building_fields].copy()
     
     buildings_by_parcel_sum = buildings.groupby('parcel_id')[['residential_units', 'job_spaces', 'building_sqft', 'non_residential_sqft','residential_sqft']].sum()
         
-    buildings_by_parcel_avg = buildings.groupby('parcel_id')[['unit_price_non_residential', 'res_price_per_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse', 'is_other']].mean()
+    buildings_by_parcel_avg = buildings.groupby('parcel_id')[['unit_price_non_residential', 'res_price_per_sqft', 'is_sf', 'is_mf', 'is_industrial', 'is_retail' , 'is_office', 'is_govt', 'is_mixeduse', 'is_other', 'year_built']].mean()
     
     buildings_by_parcel = buildings_by_parcel_sum.merge(buildings_by_parcel_avg, left_on='parcel_id', right_on='parcel_id',how='left')
     
@@ -1301,7 +1327,15 @@ def dev_indicator_export(year, settings, summary, households, buildings, parcels
     parcels_output['job_spaces'].fillna(0, inplace=True)
     parcels_output['residential_sqft'].fillna(0, inplace=True)
     parcels_output['building_sqft'].fillna(0, inplace=True)
-    parcels_output['building_count'].fillna(0, inplace=True) 
+    parcels_output['building_count'].fillna(0, inplace=True)
+    parcels_output['is_sf'].fillna(0, inplace=True)
+    parcels_output['is_mf'].fillna(0, inplace=True)
+    parcels_output['is_industrial'].fillna(0, inplace=True)
+    parcels_output['is_retail'].fillna(0, inplace=True)
+    parcels_output['is_office'].fillna(0, inplace=True)
+    parcels_output['is_govt'].fillna(0, inplace=True)
+    parcels_output['is_mixeduse'].fillna(0, inplace=True)
+    parcels_output['is_other'].fillna(0, inplace=True)     
     
     # calculate some new fields
     parcels_output['non_res_value'] = parcels_output['unit_price_non_residential'] * parcels_output['non_residential_sqft']
@@ -1318,19 +1352,35 @@ def dev_indicator_export(year, settings, summary, households, buildings, parcels
     parcels_output.loc[parcels_output['was_developed'] == 1, 'acreage_dev'] = parcels_output['parcel_acres']
     parcels_output.loc[parcels_output['was_redeveloped'] == 1, 'acreage_redev'] = parcels_output['parcel_acres']
     
+    # acreage developed residential
+    parcels_output.loc[(parcels_output['was_developed'] == 1) & ((parcels_output['is_sf'] == 1) | (parcels_output['is_mf'] == 1)), 'acreage_dev_res'] = parcels_output['parcel_acres']
+    
+    parcels_output.loc[(parcels_output['was_redeveloped'] == 1) & ((parcels_output['is_sf'] == 1) | (parcels_output['is_mf'] == 1)), 'acreage_redev_res'] = parcels_output['parcel_acres']
+    
+    parcels_output.loc[(parcels_output['was_developed'] == 1) & ((parcels_output['is_sf'] != 1) & (parcels_output['is_mf'] != 1)), 'acreage_dev_nonres'] = parcels_output['parcel_acres']  
+    
+    parcels_output.loc[(parcels_output['was_redeveloped'] == 1) & ((parcels_output['is_sf'] != 1) & (parcels_output['is_mf'] != 1)), 'acreage_redev_nonres'] = parcels_output['parcel_acres']    
+    
+    # residential units added dev and non dev
+    parcels_output.loc[(parcels_output['was_developed'] == 1), 'res_units_added_dev'] = parcels_output['res_units_added']
+    parcels_output.loc[(parcels_output['was_redeveloped'] == 1), 'res_units_added_redev'] = parcels_output['res_units_added']
+    
     # calculate total value added
     parcels_output.loc[parcels_output['was_developed'] == 1, 'value_added_dev'] = parcels_output['total_value'] - parcels_output_previous['total_value']
     parcels_output.loc[parcels_output['was_redeveloped'] == 1, 'value_added_redev'] = parcels_output['total_value'] - parcels_output_previous['total_value']
     
     # summarize results by taz
-    zones_output = parcels_output.groupby('zone_id')[['residential_units', 'job_spaces', 'job_spaces_added', 'res_units_added', 'building_count', 'acreage_dev', 'acreage_redev', 'total_value','value_added_dev', 'value_added_redev']].sum()
+    zones_output = parcels_output.groupby('zone_id')[['residential_units', 'job_spaces', 'job_spaces_added', 'res_units_added', 'building_count', 'acreage_dev', 'acreage_redev', 'total_value','value_added_dev', 'value_added_redev', 'res_units_added_dev', 'res_units_added_redev', 'acreage_dev_res', 'acreage_dev_nonres', 'acreage_redev_res', 'acreage_redev_nonres']].sum()
+    
+    # summarize results by county
+    counties_output = parcels_output.groupby('county_id')[['residential_units', 'job_spaces', 'job_spaces_added', 'res_units_added', 'building_count', 'acreage_dev', 'acreage_redev', 'total_value','value_added_dev', 'value_added_redev', 'res_units_added_dev', 'res_units_added_redev', 'acreage_dev_res', 'acreage_dev_nonres', 'acreage_redev_res', 'acreage_redev_nonres']].sum()
     
     # export the tables    
-    parcels_output.to_csv(os.path.join(directory, "run_{}_{}_parcel_dev.csv".format(summary.run_num, year)),index=False) 
-    zones_output.to_csv(os.path.join(directory, "run_{}_{}_zone_dev.csv".format(summary.run_num, year)))
+    parcels_output.to_csv(os.path.join(directory, "run_{}_year_{}_parcel_devprog.csv".format(summary.run_num, year)),index=False) 
+    zones_output.to_csv(os.path.join(directory, "run_{}_year_{}_zone_devprog.csv".format(summary.run_num, year)))
+    counties_output.to_csv(os.path.join(directory, "run_{}_year_{}_county_devprog.csv".format(summary.run_num, year)))
         
-    
-    
+     
 @sim.step('travel_model_export_no_construction')
 def travel_model_export_no_constuction(year, settings, jobs, households, buildings, parcels):
     households = households.to_frame()

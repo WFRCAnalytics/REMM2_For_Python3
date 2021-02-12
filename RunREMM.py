@@ -48,9 +48,9 @@ sim.run([
         "elcm_simulate_weber",  # employment location choice Weber County
         #"clear_cache",
         "indicator_export",
-        'dev_indicator_export',
+        'development_progress_export',
         "travel_model_export_no_construction",  # export travel model inputs at TAZ level in specified years
         "garbage_collect",
         "travel_model_export_add_construction",  # export travel model inputs at TAZ level in specified years
         #"run_cube",               # call Cube and import travel times in specified years
-    ], iter_vars=range(2015, 2061)) # change this in settings.yaml
+    ], iter_vars=range(remm_years['base_year'], remm_years['end_year'])) # change this in settings.yaml
