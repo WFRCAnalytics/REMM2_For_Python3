@@ -29,7 +29,12 @@ gridShape = r"UtilityRestriction.gdb\UtahGrid"
 gridlayer = "grid_lyr"
 arcpy.MakeFeatureLayer_management(gridShape, gridlayer)
 arcpy.AddJoin_management(gridlayer, "GRIDID", gridSum, "gridID", "KEEP_ALL")
-arcpy.CalculateField_management(gridlayer,"UtahGrid.AdjustedUnits","!gridSum.SUM_total_residential_units! * !UtahGrid.BufferFriction!","PYTHON")
+
+product_name = arcpy.GetInstallInfo()['ProductName']
+if product_name == 'ArcGISPro': etype = 'PYTHON3'
+else: etype = 'PYTHON'
+
+arcpy.CalculateField_management(gridlayer,"UtahGrid.AdjustedUnits","!gridSum.SUM_total_residential_units! * !UtahGrid.BufferFriction!",etype)
 arcpy.SelectLayerByAttribute_management(gridlayer, "NEW_SELECTION", 'UtahGrid.AdjustedUnits >= 10')
 
 f = open(r'..\YEAR.txt', 'r')
