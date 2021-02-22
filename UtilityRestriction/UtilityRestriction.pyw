@@ -29,7 +29,7 @@ gridShape = r"UtilityRestriction.gdb\UtahGrid"
 gridlayer = "grid_lyr"
 arcpy.MakeFeatureLayer_management(gridShape, gridlayer)
 arcpy.AddJoin_management(gridlayer, "GRIDID", gridSum, "gridID", "KEEP_ALL")
-arcpy.CalculateField_management(gridlayer,"UtahGrid.AdjustedUnits","!gridSum.SUM_total_residential_units! * !UtahGrid.BufferFriction!","PYTHON_9.3")
+arcpy.CalculateField_management(gridlayer,"UtahGrid.AdjustedUnits","!gridSum.SUM_total_residential_units! * !UtahGrid.BufferFriction!","PYTHON")
 arcpy.SelectLayerByAttribute_management(gridlayer, "NEW_SELECTION", 'UtahGrid.AdjustedUnits >= 10')
 
 f = open(r'..\YEAR.txt', 'r')

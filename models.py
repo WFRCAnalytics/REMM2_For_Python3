@@ -1676,15 +1676,15 @@ def run_arcpy(year, settings,store):
         
         # Check for arcpy module with current environment. if not found, use bat file to look for it
         package_name = 'arcpy'
-        spec = importlib.util.find_spec(package_name) 
-        if spec is None:
-            print(package_name +" is not installed in this version of python, looking for other version of python on C: Drive")
-            try:
-                subprocess.call(r"UtilityRestriction.bat")
-            except:
-                print("Did not find arcgis python installation")
-        else:
-            import UtilityRestriction
+        #spec = importlib.util.find_spec(package_name) 
+        #if spec is None:
+            #print(package_name +" is not installed in this version of python, looking for other version of python on C: Drive")
+        try:
+            subprocess.call(r"UtilityRestriction.bat")
+        except:
+            print("Did not find arcgis python installation")
+        #else:
+            #import UtilityRestriction
         os.chdir(REMMdir)
         
 # this if the function for mapping a specific building that we build to a
