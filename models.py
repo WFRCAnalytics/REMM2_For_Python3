@@ -1661,31 +1661,90 @@ def run_cube(year, settings,store):
         os.chdir(REMMdir)
         
         
-@sim.step('run_arcpy') # update this to use built in arcpy module
-def run_arcpy(year, settings,store):
-    if year%3 == 2:
-    #if year > 0:
-        REMMdir = os.getcwd()
-        b = sim.get_table('parcels').to_frame(['x','y','total_residential_units','total_job_spaces','county_id','gridID'])
-        bdev = b[((b.total_residential_units >= 1) | (b.total_job_spaces >= 1))&(b.county_id == 49)]
-        bdev.to_csv('utahdevelopedparcels.csv')
-        f = open('YEAR.txt', 'w')
-        f.write(str(year))
-        f.close()
-        os.chdir(os.path.join(REMMdir,"UtilityRestriction"))
-        
-        # Check for arcpy module with current environment. if not found, use bat file to look for it
-        package_name = 'arcpy'
-        #spec = importlib.util.find_spec(package_name) 
-        #if spec is None:
-            #print(package_name +" is not installed in this version of python, looking for other version of python on C: Drive")
-        try:
-            subprocess.call(r"UtilityRestriction.bat")
-        except:
-            print("Did not find arcgis python installation")
-        #else:
-            #import UtilityRestriction
-        os.chdir(REMMdir)
+@sim.step('utility_restriction') # update this to use built in arcpy module
+def utility_restriction(year, settings,store):
+
+    try:
+        import arcpy
+
+
+        if year%3 == 2:
+        #if year > 0:
+            REMMdir = os.getcwd()
+            b = sim.get_table('parcels').to_frame(['x','y','total_residential_units','total_job_spaces','county_id','gridID'])
+            bdev = b[((b.total_residential_units >= 1) | (b.total_job_spaces >= 1))&(b.county_id == 49)]
+            bdev.to_csv('utahdevelopedparcels.csv')
+
+            #write the current year.txt file
+            f = open('YEAR.txt', 'w')
+            f.write(str(year))
+            f.close()
+
+            os.chdir(os.path.join(REMMdir,"UtilityRestriction"))
+
+            print("Utility Restriction start")
+
+            arcpy.env.overwriteOutput = True
+
+            devbuilding = r"..\utahdevelopedparcels.csv"
+            tabledir = r"UtilityRestriction.gdb"
+            tableall = r"UtilityRestriction.gdb\utahdevelopeparcels"
+            table = "utahdevelopeparcels"
+
+            arcpy.TableToTable_conversion(devbuilding, tabledir, table)
+
+            spRef = r"projection.prj"
+
+            point = "pointlyr"
+            pointfeature = r"UtilityRestriction.gdb\utahdevpoint"
+            arcpy.MakeXYEventLayer_management(tableall, "x", "y", point, spRef)
+
+            # arcpy.CopyFeatures_management(point,pointfeature)
+            arcpy.FeatureClassToFeatureClass_conversion(point, os.path.dirname(pointfeature),
+                                                        os.path.basename(pointfeature))
+
+            gridSum = r"UtilityRestriction.gdb\gridSum"
+            arcpy.Statistics_analysis(pointfeature, gridSum,
+                                      [["total_residential_units", "SUM"], ["total_job_spaces", "SUM"]], "gridID")
+
+            gridShape = r"UtilityRestriction.gdb\UtahGrid"
+            gridlayer = "grid_lyr"
+            arcpy.MakeFeatureLayer_management(gridShape, gridlayer)
+            arcpy.AddJoin_management(gridlayer, "GRIDID", gridSum, "gridID", "KEEP_ALL")
+            arcpy.CalculateField_management(gridlayer, "UtahGrid.AdjustedUnits",
+                                            "!gridSum.SUM_total_residential_units! * !UtahGrid.BufferFriction!", "PYTHON3")
+            arcpy.SelectLayerByAttribute_management(gridlayer, "NEW_SELECTION", 'UtahGrid.AdjustedUnits >= 10')
+
+            resdevbuffer = r"UtilityRestriction.gdb\resdevbuffer_" + str(year)
+            arcpy.Buffer_analysis(gridlayer, resdevbuffer, "0.5 Miles", "FULL", "ROUND", "ALL")
+
+            utahparcels = r"UtilityRestriction.gdb\utahparcelspoint"
+            utahparcelslyr = "utahparcellyr"
+            arcpy.MakeFeatureLayer_management(utahparcels, utahparcelslyr)
+
+            arcpy.SelectLayerByLocation_management(utahparcelslyr, "INTERSECT", resdevbuffer)
+            arcpy.SelectLayerByLocation_management(utahparcelslyr, None, None, "", "SWITCH_SELECTION")
+
+            arcpy.TableToTable_conversion(utahparcelslyr, r"..\data", 'developableparcels.dbf')
+
+            print("Utility Restriction end")
+
+            # Check for arcpy module with current environment. if not found, use bat file to look for it
+            #package_name = 'arcpy'
+            #spec = importlib.util.find_spec(package_name)
+            #if spec is None:
+                #print(package_name +" is not installed in this version of python, looking for other version of python on C: Drive")
+            #try:
+                #subprocess.call(r"UtilityRestriction.bat")
+            #except:
+                #print("Did not find arcgis python installation")
+            #else:
+                #import UtilityRestriction
+            os.chdir(REMMdir)
+
+    except:
+        print("arcpy is not available. Skipping Utility Restriction.")
+
         
 # this if the function for mapping a specific building that we build to a
 # specific building type

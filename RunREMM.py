@@ -10,7 +10,7 @@ remm_years = sim.get_injectable('settings')['remm']
 #sim.run(["travel_time_reset"])
 sim.run([
         "clear_cache",
-        "run_arcpy",
+        "utility_restriction",    # run utility restriction for UT County
         "travel_time_import",
         "neighborhood_vars",      # neighborhood variables
         "households_transition",  # households transition
