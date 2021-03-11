@@ -1170,16 +1170,29 @@ def indicator_export(households, buildings, jobs, parcels, zones, distlrg, distm
         #geog_export(zone_id_2011, households, jobs, buildings, uphh, upj, year, summary.run_num)        
 
 
-@sim.step('development_progress_export')
-def development_progress_export(year, settings, store, summary, jobs, buildings, parcels, zoning_baseline):
+@sim.step('progression_metrics_export')
+def progression_metrics_export(year, settings, store, summary, jobs, households, buildings, parcels, zoning_baseline):
     
     # get the base year
     base_year = settings['remm']['base_year']
     
     # create folder within REMMRun to house outputs
-    directory = 'REMMRun/development_progress'
+    directory = 'REMMRun/Progression_Metrics'
     if not os.path.exists(directory):
         os.makedirs(directory)    
+    
+        #tdm_output = pd.read_csv("data/tdm_template.csv",index_col = ";TAZID")
+        #tdm_output['TOTHH'] = households.groupby("zone_id").building_id.count()
+        #tdm_output['HHPOP'] = households.groupby("zone_id").persons.sum()
+        #tdm_output['RETL'] = jobs[jobs.sector_id==9].groupby("zone_id").building_id.count()
+        #tdm_output['FOOD'] = jobs[jobs.sector_id==1].groupby("zone_id").building_id.count()
+        #tdm_output['MANU'] = jobs[jobs.sector_id==5].groupby("zone_id").building_id.count()
+        #tdm_output['WSLE'] = jobs[jobs.sector_id==10].groupby("zone_id").building_id.count()
+        #tdm_output['OFFI'] = jobs[jobs.sector_id==6].groupby("zone_id").building_id.count()
+        #tdm_output['GVED'] = jobs[jobs.sector_id==3].groupby("zone_id").building_id.count()
+        #tdm_output['HLTH'] = jobs[jobs.sector_id==4].groupby("zone_id").building_id.count()
+        #tdm_output['OTHR'] = jobs[jobs.sector_id==7].groupby("zone_id").building_id.count()    
+    
     
     # if base year, output data before simulation
     if  year == base_year:
@@ -1208,7 +1221,7 @@ def development_progress_export(year, settings, store, summary, jobs, buildings,
         base_parcels['developable'].fillna(1, inplace=True)        
         
         # get base buildings, identify if parcel has building
-        base_buildings = store['buildings']
+        base_buildings = store['buildings'].reset_index()
         ids = list(set(base_buildings["parcel_id"].to_list()))
         base_parcels.loc[base_parcels['parcel_id'].isin(ids), 'has_buildings'] = 1
                 
@@ -1235,7 +1248,23 @@ def development_progress_export(year, settings, store, summary, jobs, buildings,
         building_count.columns = ['parcel_id', 'building_count']
         building_summary = buildings_by_parcel.merge(building_count, left_on='parcel_id', right_on='parcel_id', how='left')     
         parcels_output = base_parcels.merge(building_summary, left_on='parcel_id', right_on='parcel_id', how='left')
-    
+        
+        # summarize jobs added by type
+        base_jobs = store['jobs'].reset_index()
+        base_jobs_pivot = pd.pivot_table(base_jobs, values='cid', index = 'building_id', columns='sector_id', aggfunc='count').reset_index()
+        base_jobs_pivot.fillna(0, inplace=True)
+        base_jobs_pivot.columns = ['building_id','jobs_accom_food','jobs_gov_edu','jobs_health','jobs_manuf','jobs_office','jobs_other','jobs_retail','jobs_wholesale']
+        jobs_by_building = base_buildings.merge(base_jobs_pivot, left_on='building_id', right_on='building_id', how='left')
+        jobs_summary = jobs_by_building.groupby('parcel_id')[['jobs_accom_food','jobs_gov_edu','jobs_health','jobs_manuf','jobs_office','jobs_other','jobs_retail','jobs_wholesale']].sum()
+        parcels_output = parcels_output.merge(jobs_summary, left_on='parcel_id', right_on='parcel_id', how='left')
+        
+        # get household count, may be the same as residential units - can delete this if redundant
+        base_households = store['households'].reset_index()
+        base_households = base_households.merge(base_buildings[['building_id','parcel_id']])
+        households_count = pd.DataFrame(base_households['parcel_id'].value_counts()).reset_index()
+        households_count.columns = ['parcel_id', 'households_count']
+        parcels_output = parcels_output.merge(households_count, left_on='parcel_id', right_on='parcel_id', how='left')
+        
         # fill NAs
         parcels_output['residential_units'].fillna(0, inplace=True)
         parcels_output['job_spaces'].fillna(0, inplace=True)
@@ -1259,7 +1288,7 @@ def development_progress_export(year, settings, store, summary, jobs, buildings,
         parcels_output['total_value'] = parcels_output['land_value']  + (parcels_output['non_res_value'] + parcels_output['res_value'])
         
         # export the data table
-        parcels_output.to_csv(os.path.join(directory, "run_{}_base_year_{}_parcel_devprog.csv".format(summary.run_num, year)),index=False)
+        parcels_output.to_csv(os.path.join(directory, "run_{}_base_year_{}_parcel_progression_metrics.csv".format(summary.run_num, year)),index=False)
         
         # set the base year as the previous years table
         parcels_output_previous = parcels_output
@@ -1267,14 +1296,18 @@ def development_progress_export(year, settings, store, summary, jobs, buildings,
     else:
         
         # load previous year's data (we need has_buildings from previous table)
-        parcels_output_previous = pd.read_csv(os.path.join(directory, "run_{}_year_{}_parcel_devprog.csv".format(summary.run_num, year-1)))       
+        parcels_output_previous = pd.read_csv(os.path.join(directory, "run_{}_year_{}_parcel_progression_metrics.csv".format(summary.run_num, year-1)))       
          
     
     # load the data tables
     buildings = buildings.to_frame()
     parcels = parcels.to_frame().reset_index()    
     zoning = zoning_baseline.to_frame().reset_index()
-    #jobs = jobs.to_frame()
+    jobs = jobs.to_frame().reset_index()
+    households = households.to_frame().reset_index()
+    
+    jobs.to_csv("test_jobs{}.csv".format(year))
+    households.to_csv("test_households{}.csv".format(year))
     
     # subset columns in parcels table
     parcels = parcels[['parcel_id', 'parcel_id_REMM', 'county_id', 'zone_id','parcel_acres',
@@ -1322,20 +1355,21 @@ def development_progress_export(year, settings, store, summary, jobs, buildings,
     building_summary = buildings_by_parcel.merge(building_count, left_on='parcel_id', right_on='parcel_id', how='left')        
     parcels_output = parcels.merge(building_summary, left_on='parcel_id', right_on='parcel_id', how='left')        
     
-    # fill na's with 0
-    parcels_output['residential_units'].fillna(0, inplace=True)
-    parcels_output['job_spaces'].fillna(0, inplace=True)
-    parcels_output['residential_sqft'].fillna(0, inplace=True)
-    parcels_output['building_sqft'].fillna(0, inplace=True)
-    parcels_output['building_count'].fillna(0, inplace=True)
-    parcels_output['is_sf'].fillna(0, inplace=True)
-    parcels_output['is_mf'].fillna(0, inplace=True)
-    parcels_output['is_industrial'].fillna(0, inplace=True)
-    parcels_output['is_retail'].fillna(0, inplace=True)
-    parcels_output['is_office'].fillna(0, inplace=True)
-    parcels_output['is_govt'].fillna(0, inplace=True)
-    parcels_output['is_mixeduse'].fillna(0, inplace=True)
-    parcels_output['is_other'].fillna(0, inplace=True)     
+    # summarize jobs added by type
+    jobs_pivot = pd.pivot_table(jobs, values='cid', index = 'building_id', columns='sector_id', aggfunc='count').reset_index()
+    jobs_pivot.fillna(0, inplace=True )
+    jobs_pivot.columns = ['building_id','jobs_accom_food','jobs_gov_edu','jobs_health','jobs_manuf','jobs_office','jobs_other','jobs_retail','jobs_wholesale']
+    jobs_by_building = buildings.merge(jobs_pivot, left_on='building_id', right_on='building_id', how='left')
+    jobs_summary = jobs_by_building.groupby('parcel_id')[['jobs_accom_food','jobs_gov_edu','jobs_health','jobs_manuf','jobs_office','jobs_other','jobs_retail','jobs_wholesale']].sum()
+    parcels_output = parcels_output.merge(jobs_summary, left_on='parcel_id', right_on='parcel_id', how='left')    
+    
+    
+    # get household count, may be the same as residential units - can delete this if redundant
+    households_count = pd.DataFrame(households['parcel_id'].value_counts()).reset_index()
+    households_count.columns = ['parcel_id', 'households_count']
+    parcels_output = parcels_output.merge(households_count, left_on='parcel_id', right_on='parcel_id', how='left')    
+    
+     
     
     # calculate some new fields
     parcels_output['non_res_value'] = parcels_output['unit_price_non_residential'] * parcels_output['non_residential_sqft']
@@ -1346,6 +1380,17 @@ def development_progress_export(year, settings, store, summary, jobs, buildings,
     
     parcels_output['total_value'] = parcels_output['land_value']  + (parcels_output['non_res_value'] + parcels_output['res_value']) 
     parcels_output['job_spaces_added'] = parcels_output['job_spaces'] - parcels_output_previous['job_spaces']
+    
+    parcels_output['jobs_accom_food_added'] = parcels_output['jobs_accom_food'] - parcels_output_previous['jobs_accom_food']
+    parcels_output['jobs_gov_edu_added'] = parcels_output['jobs_gov_edu'] - parcels_output_previous['jobs_gov_edu']
+    parcels_output['jobs_health_added'] = parcels_output['jobs_health'] - parcels_output_previous['jobs_health']
+    parcels_output['jobs_manuf_added'] = parcels_output['jobs_manuf'] - parcels_output_previous['jobs_manuf']
+    parcels_output['jobs_office_added'] = parcels_output['jobs_office'] - parcels_output_previous['jobs_office']
+    parcels_output['jobs_other_added'] = parcels_output['jobs_other'] - parcels_output_previous['jobs_other']
+    parcels_output['jobs_retail_added'] = parcels_output['jobs_retail'] - parcels_output_previous['jobs_retail']
+    parcels_output['jobs_wholesale_added'] = parcels_output['jobs_wholesale'] - parcels_output_previous['jobs_wholesale']
+    
+
     parcels_output['res_units_added'] = parcels_output['residential_units'] - parcels_output_previous['residential_units']
     
     # calculate acreage developed
@@ -1368,17 +1413,22 @@ def development_progress_export(year, settings, store, summary, jobs, buildings,
     # calculate total value added
     parcels_output.loc[parcels_output['was_developed'] == 1, 'value_added_dev'] = parcels_output['total_value'] - parcels_output_previous['total_value']
     parcels_output.loc[parcels_output['was_redeveloped'] == 1, 'value_added_redev'] = parcels_output['total_value'] - parcels_output_previous['total_value']
+    parcels_output.loc[(parcels_output['was_developed'] == 1) & ((parcels_output['is_sf'] == 1) | (parcels_output['is_mf'] == 1)), 'value_added_dev_res'] = parcels_output['total_value'] - parcels_output_previous['total_value']
+    parcels_output.loc[(parcels_output['was_developed'] == 1) & ((parcels_output['is_sf'] != 1) & (parcels_output['is_mf'] != 1)), 'value_added_dev_nonres'] = parcels_output['total_value'] - parcels_output_previous['total_value']
+    
+    # fill na's with 0
+    parcels_output.fillna(0, inplace=True)     
     
     # summarize results by taz
-    zones_output = parcels_output.groupby('zone_id')[['residential_units', 'job_spaces', 'job_spaces_added', 'res_units_added', 'building_count', 'acreage_dev', 'acreage_redev', 'total_value','value_added_dev', 'value_added_redev', 'res_units_added_dev', 'res_units_added_redev', 'acreage_dev_res', 'acreage_dev_nonres', 'acreage_redev_res', 'acreage_redev_nonres']].sum()
+    zones_output = parcels_output.groupby('zone_id')[['was_developed', 'was_redeveloped','residential_units', 'job_spaces', 'job_spaces_added', 'res_units_added', 'building_count', 'households_count','acreage_dev', 'acreage_redev', 'total_value','value_added_dev', 'value_added_redev', 'res_units_added_dev', 'res_units_added_redev', 'acreage_dev_res', 'acreage_dev_nonres', 'acreage_redev_res', 'acreage_redev_nonres', 'value_added_dev_res', 'value_added_dev_nonres', 'jobs_accom_food_added','jobs_gov_edu_added','jobs_health_added', 'jobs_manuf_added','jobs_office_added', 'jobs_other_added', 'jobs_retail_added', 'jobs_wholesale_added' ]].sum()
     
     # summarize results by county
-    counties_output = parcels_output.groupby('county_id')[['residential_units', 'job_spaces', 'job_spaces_added', 'res_units_added', 'building_count', 'acreage_dev', 'acreage_redev', 'total_value','value_added_dev', 'value_added_redev', 'res_units_added_dev', 'res_units_added_redev', 'acreage_dev_res', 'acreage_dev_nonres', 'acreage_redev_res', 'acreage_redev_nonres']].sum()
+    counties_output = parcels_output.groupby('county_id')[['was_developed', 'was_redeveloped','residential_units', 'job_spaces', 'job_spaces_added', 'res_units_added', 'building_count', 'households_count', 'acreage_dev', 'acreage_redev', 'total_value','value_added_dev', 'value_added_redev', 'res_units_added_dev', 'res_units_added_redev', 'acreage_dev_res', 'acreage_dev_nonres', 'acreage_redev_res', 'acreage_redev_nonres', 'value_added_dev_res', 'value_added_dev_nonres', 'jobs_accom_food_added','jobs_gov_edu_added','jobs_health_added', 'jobs_manuf_added','jobs_office_added', 'jobs_other_added', 'jobs_retail_added', 'jobs_wholesale_added' ]].sum()
     
     # export the tables    
-    parcels_output.to_csv(os.path.join(directory, "run_{}_year_{}_parcel_devprog.csv".format(summary.run_num, year)),index=False) 
-    zones_output.to_csv(os.path.join(directory, "run_{}_year_{}_zone_devprog.csv".format(summary.run_num, year)))
-    counties_output.to_csv(os.path.join(directory, "run_{}_year_{}_county_devprog.csv".format(summary.run_num, year)))
+    parcels_output.to_csv(os.path.join(directory, "run_{}_year_{}_parcel_progression_metrics.csv".format(summary.run_num, year)),index=False) 
+    zones_output.to_csv(os.path.join(directory, "run_{}_year_{}_zone_progression_metrics.csv".format(summary.run_num, year)))
+    counties_output.to_csv(os.path.join(directory, "run_{}_year_{}_county_progression_metrics.csv".format(summary.run_num, year)))
         
      
 @sim.step('travel_model_export_no_construction')

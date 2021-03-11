@@ -48,7 +48,7 @@ sim.run([
         "elcm_simulate_weber",  # employment location choice Weber County
         #"clear_cache",
         "indicator_export",
-        'development_progress_export',
+        'progression_metrics_export',
         "travel_model_export_no_construction",  # export travel model inputs at TAZ level in specified years
         "garbage_collect",
         "travel_model_export_add_construction",  # export travel model inputs at TAZ level in specified years
