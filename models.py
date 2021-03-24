@@ -1392,6 +1392,7 @@ def progression_metrics_export(year, settings, store, summary, jobs, households,
     
 
     parcels_output['res_units_added'] = parcels_output['residential_units'] - parcels_output_previous['residential_units']
+    parcels_output['households_added'] = parcels_output['households_count'] - parcels_output_previous['households_count']
     
     # calculate acreage developed
     parcels_output.loc[parcels_output['was_developed'] == 1, 'acreage_dev'] = parcels_output['parcel_acres']
@@ -1420,10 +1421,10 @@ def progression_metrics_export(year, settings, store, summary, jobs, households,
     parcels_output.fillna(0, inplace=True)     
     
     # summarize results by taz
-    zones_output = parcels_output.groupby('zone_id')[['was_developed', 'was_redeveloped','residential_units', 'job_spaces', 'job_spaces_added', 'res_units_added', 'building_count', 'households_count','acreage_dev', 'acreage_redev', 'total_value','value_added_dev', 'value_added_redev', 'res_units_added_dev', 'res_units_added_redev', 'acreage_dev_res', 'acreage_dev_nonres', 'acreage_redev_res', 'acreage_redev_nonres', 'value_added_dev_res', 'value_added_dev_nonres', 'jobs_accom_food_added','jobs_gov_edu_added','jobs_health_added', 'jobs_manuf_added','jobs_office_added', 'jobs_other_added', 'jobs_retail_added', 'jobs_wholesale_added' ]].sum()
+    zones_output = parcels_output.groupby('zone_id')[['was_developed', 'was_redeveloped','residential_units', 'job_spaces', 'job_spaces_added', 'res_units_added', 'building_count', 'households_count','households_added','acreage_dev', 'acreage_redev', 'total_value','value_added_dev', 'value_added_redev', 'res_units_added_dev', 'res_units_added_redev', 'acreage_dev_res', 'acreage_dev_nonres', 'acreage_redev_res', 'acreage_redev_nonres', 'value_added_dev_res', 'value_added_dev_nonres', 'jobs_accom_food_added','jobs_gov_edu_added','jobs_health_added', 'jobs_manuf_added','jobs_office_added', 'jobs_other_added', 'jobs_retail_added', 'jobs_wholesale_added' ]].sum()
     
     # summarize results by county
-    counties_output = parcels_output.groupby('county_id')[['was_developed', 'was_redeveloped','residential_units', 'job_spaces', 'job_spaces_added', 'res_units_added', 'building_count', 'households_count', 'acreage_dev', 'acreage_redev', 'total_value','value_added_dev', 'value_added_redev', 'res_units_added_dev', 'res_units_added_redev', 'acreage_dev_res', 'acreage_dev_nonres', 'acreage_redev_res', 'acreage_redev_nonres', 'value_added_dev_res', 'value_added_dev_nonres', 'jobs_accom_food_added','jobs_gov_edu_added','jobs_health_added', 'jobs_manuf_added','jobs_office_added', 'jobs_other_added', 'jobs_retail_added', 'jobs_wholesale_added' ]].sum()
+    counties_output = parcels_output.groupby('county_id')[['was_developed', 'was_redeveloped','residential_units', 'job_spaces', 'job_spaces_added', 'res_units_added', 'building_count', 'households_count','households_added', 'acreage_dev', 'acreage_redev', 'total_value','value_added_dev', 'value_added_redev', 'res_units_added_dev', 'res_units_added_redev', 'acreage_dev_res', 'acreage_dev_nonres', 'acreage_redev_res', 'acreage_redev_nonres', 'value_added_dev_res', 'value_added_dev_nonres', 'jobs_accom_food_added','jobs_gov_edu_added','jobs_health_added', 'jobs_manuf_added','jobs_office_added', 'jobs_other_added', 'jobs_retail_added', 'jobs_wholesale_added' ]].sum()
     
     # export the tables    
     parcels_output.to_csv(os.path.join(directory, "run_{}_year_{}_parcel_progression_metrics.csv".format(summary.run_num, year)),index=False) 
@@ -1793,9 +1794,9 @@ def utility_restriction(year, settings,store):
             os.chdir(REMMdir)
 
     except:
+        os.chdir(REMMdir)
         print("arcpy is not available. Skipping Utility Restriction.")
-
-        
+       
 # this if the function for mapping a specific building that we build to a
 # specific building type
 @sim.injectable("form_to_btype_func", autocall=False)
