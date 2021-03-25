@@ -1306,8 +1306,8 @@ def progression_metrics_export(year, settings, store, summary, jobs, households,
     jobs = jobs.to_frame().reset_index()
     households = households.to_frame().reset_index()
     
-    jobs.to_csv("test_jobs{}.csv".format(year))
-    households.to_csv("test_households{}.csv".format(year))
+    #jobs.to_csv("'REMMRun/test_jobs{}.csv".format(year))
+    #households.to_csv("'REMMRun/test_households{}.csv".format(year))
     
     # subset columns in parcels table
     parcels = parcels[['parcel_id', 'parcel_id_REMM', 'county_id', 'zone_id','parcel_acres',
