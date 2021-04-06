@@ -1,5 +1,6 @@
 import pandas as pd, numpy as np, pysal as ps
 import time
+import datetime
 import string
 import os
 import _pickle as pickle
@@ -19,9 +20,10 @@ def hedonic_export(hedonic_output, filepath):
     sm = h_dict['models'].keys()
     h_est = pd.DataFrame(columns=['Submodel','Variable','Coefficient','T-Score','Std. Error','R-Squared','Adj. R-Squared'])
     for sub in h_dict['models'].keys():	
-        params = h_dict['models'][sub]['fit_parameters']   
+        params = h_dict['models'][sub]['fit_parameters']
+        print(type(params.keys()))
         vars = params['Coefficient'].keys()
-        temp = pd.DataFrame(columns=(['Variable','R-Squared','Adj. R-Squared'] + params.keys()))
+        temp = pd.DataFrame(columns=(['Variable','R-Squared','Adj. R-Squared'] + list(params.keys())))
         for v in vars:
             row = dict()
             row['Variable'] = v
@@ -33,7 +35,8 @@ def hedonic_export(hedonic_output, filepath):
         temp['Adj. R-Squared'].loc[0] = h_dict['models'][sub]['fit_rsquared_adj']
         h_est = pd.concat([h_est, temp])
     h_est.set_index(['Submodel', h_est.index], inplace=True)
-    ts = string.replace(time.asctime(), ':','-')
+    #ts = string.replace(time.asctime(), ':','-')
+    ts = datetime.datetime.now().strftime("_%m%d%Y_%H%M")
     h_est.to_csv(filepath + ts + '.csv', columns=['R-Squared','Adj. R-Squared','Variable','Coefficient','T-Score','Std. Error'])
 
 def lcm_export(lcm_output, filepath):
